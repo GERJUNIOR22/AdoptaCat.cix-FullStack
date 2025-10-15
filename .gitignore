@@ -1,1 +1,23 @@
-# Ignore local spring configs\nbackend/src/main/resources/application-*.properties\n# node modules and builds\nfrontend/node_modules\n**/target\n
+# Ignore local spring configs
+backend/src/main/resources/application-*.properties
+
+# node modules and builds
+frontend/node_modules
+**/target
+
+# Environment files
+.env
+backend/.env
+frontend/.env
+
+# IDE files
+.idea/
+.vscode/
+
+# Build artifacts
+/target/
+frontend/dist/
+
+# Others
+*.log
+coverage/# Ignore local spring configs\nbackend/src/main/resources/application-*.properties\n# node modules and builds\nfrontend/node_modules\n**/target\n
