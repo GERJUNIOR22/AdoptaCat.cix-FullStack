@@ -14,6 +14,7 @@ Cómo usar localmente:
 - Desde `backend/`:
 
 ```powershell
+cd backend
 ./mvnw clean package
 ./mvnw spring-boot:run
 ```
@@ -23,6 +24,7 @@ Cómo usar localmente:
 - Desde `frontend/`:
 
 ```powershell
+cd frontend
 npm install
 npm start
 ```
