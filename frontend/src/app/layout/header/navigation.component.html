@@ -1,0 +1,122 @@
+<!-- Modal de Inicio de Sesión simple (Reemplazo de <LoginModal>) -->
+<!-- Usamos *ngIf para mostrar/ocultar el modal basado en el signal -->
+<div *ngIf="showLoginModal()" class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm" (click)="showLoginModal.set(false)">
+    <div class="bg-background p-8 rounded-lg shadow-xl w-full max-w-sm" (click)="$event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Iniciar Sesión</h2>
+            <button (click)="showLoginModal.set(false)" class="text-foreground/70 hover:text-foreground">
+                <!-- Icono X (cierre) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        <p class="text-sm text-muted-foreground mb-4">Este es un placeholder para el formulario de inicio de sesión. Implementa aquí el contenido del componente LoginModal.</p>
+        <button (click)="showLoginModal.set(false)" class="w-full btn btn-primary">Cerrar</button>
+    </div>
+</div>
+
+<nav class="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo -->
+            <a [routerLink]="['/']" class="flex items-center gap-2 font-bold text-xl text-primary">
+                <!-- Icono Heart (corazón) - Reemplazo de <Heart> de lucide-react -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                <span>AdoptaCat</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center gap-6">
+                <a [routerLink]="['/adopta']" class="text-foreground hover:text-primary transition-colors">
+                    Adopta
+                </a>
+                <a [routerLink]="['/apadrina']" class="text-foreground hover:text-primary transition-colors">
+                    Apadrina
+                </a>
+                <a [routerLink]="['/blog']" class="text-foreground hover:text-primary transition-colors">
+                    Blog
+                </a>
+                <a [routerLink]="['/nosotros']" class="text-foreground hover:text-primary transition-colors">
+                    Nosotros
+                </a>
+                
+                <!-- Botón de Donaciones -->
+                <a [routerLink]="['/donaciones']" class="btn bg-accent hover:bg-accent/90 text-accent-foreground">
+                    Donaciones
+                </a>
+                
+                <!-- Botón Iniciar Sesión -->
+                <button 
+                    class="btn btn-outline gap-2 bg-transparent" 
+                    (click)="openLoginModal()"
+                >
+                    <!-- Icono User (usuario) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Iniciar Sesión
+                </button>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button 
+                class="md:hidden"
+                (click)="toggleMenu()"
+                aria-label="Toggle menu"
+            >
+                <!-- Icono Menu (hamburguesa) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="md:hidden" [class.hidden]="!isOpen()">
+            <div class="py-4 space-y-4 border-t border-border">
+                <a 
+                    [routerLink]="['/adopta']" 
+                    class="block text-foreground hover:text-primary transition-colors"
+                    (click)="closeMenu()"
+                >
+                    Adopta
+                </a>
+                <a 
+                    [routerLink]="['/apadrina']" 
+                    class="block text-foreground hover:text-primary transition-colors"
+                    (click)="closeMenu()"
+                >
+                    Apadrina
+                </a>
+                <a 
+                    [routerLink]="['/blog']" 
+                    class="block text-foreground hover:text-primary transition-colors"
+                    (click)="closeMenu()"
+                >
+                    Blog
+                </a>
+                <a 
+                    [routerLink]="['/nosotros']" 
+                    class="block text-foreground hover:text-primary transition-colors"
+                    (click)="closeMenu()"
+                >
+                    Nosotros
+                </a>
+                
+                <!-- Botón de Donaciones Móvil -->
+                <a 
+                    [routerLink]="['/donaciones']" 
+                    class="block btn bg-accent hover:bg-accent/90 text-accent-foreground text-center"
+                    (click)="closeMenu()"
+                >
+                    Donaciones
+                </a>
+                
+                <!-- Botón Iniciar Sesión Móvil -->
+                <button 
+                    class="w-full btn btn-outline gap-2 bg-transparent justify-start"
+                    (click)="openLoginModal()"
+                >
+                    <!-- Icono User (usuario) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Iniciar Sesión
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
