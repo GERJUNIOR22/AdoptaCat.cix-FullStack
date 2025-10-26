@@ -17,7 +17,7 @@ publish = "D:\\GitHubDesktop\\AdoptaCat.cix-FullStack\\frontend\\dist\\frontend"
 publishOrigin = "config"
 commandOrigin = "config"
 base = "D:\\GitHubDesktop\\AdoptaCat.cix-FullStack\\frontend"
-command = "npm run build"
+command = "npm install && npm run build"
 
 [build.environment]
 
