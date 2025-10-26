@@ -1,1 +1,79 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for Tailwind theme - Colores del logo AdoptaCat */
+:root {
+  --background: 0 0% 98%;
+  --foreground: 355 15% 25%;
+  --card: 0 0% 100%;
+  --card-foreground: 355 15% 25%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 355 15% 25%;
+  --primary: 355 70% 80%; /* Rosa coral del logo */
+  --primary-foreground: 355 15% 25%;
+  --secondary: 355 50% 95%; /* Rosa muy claro */
+  --secondary-foreground: 355 15% 25%;
+  --muted: 355 30% 92%;
+  --muted-foreground: 355 10% 45%;
+  --accent: 355 60% 88%;
+  --accent-foreground: 355 15% 25%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 355 20% 88%;
+  --input: 355 20% 88%;
+  --ring: 355 70% 80%;
+  --radius: 0.5rem;
+}
+
+/* Dark mode */
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 346.8 77.2% 49.8%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 346.8 77.2% 49.8%;
+}
+
+/* Base styles */
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Button utilities */
+.btn {
+  @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 px-4 py-2;
+}
+
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.btn-outline {
+  @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+}
+
+/* Container utility */
+.container {
+  @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}

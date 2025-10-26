@@ -1,0 +1,104 @@
+<!-- Login Modal Component -->
+<app-login-modal #loginModal></app-login-modal>
+
+<nav class="sticky top-0 z-50 bg-rose-50/95 backdrop-blur supports-[backdrop-filter]:bg-rose-50/80 border-b border-rose-200">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-20 md:h-24">
+            <!-- Logo -->
+            <a [routerLink]="['/']" class="flex items-center py-2">
+                <!-- Imagen del logo más grande y centrada -->
+                <img 
+                    src="/assets/adoptacat/logoadopcat1.webp" 
+                    alt="AdoptaCat Chiclayo" 
+                    class="w-16 h-16 md:w-20 md:h-20 hover:scale-105 transition-all duration-300 drop-shadow-md hover:drop-shadow-lg object-contain"
+                >
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center gap-8">
+                <a [routerLink]="['/adopta']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                    Adopta
+                </a>
+                <a [routerLink]="['/apadrina']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                    Apadrina
+                </a>
+                <a [routerLink]="['/blog']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                    Blog
+                </a>
+                <a [routerLink]="['/nosotros']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                    Nosotros
+                </a>
+                <a [routerLink]="['/donaciones']" class="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-6 py-2 rounded-full transition-colors font-medium shadow-md">
+                    Donaciones
+                </a>
+                <button 
+                    (click)="openLoginModal($event)"
+                    class="flex items-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 px-4 py-2 rounded-full transition-colors font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Iniciar sesión
+                </button>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button 
+                class="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
+                (click)="toggleMenu()"
+                aria-label="Toggle menu"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="md:hidden" [class.hidden]="!isOpen()">
+            <div class="py-4 space-y-4 border-t border-rose-200">
+                <a 
+                    [routerLink]="['/adopta']" 
+                    class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                    (click)="closeMenu()"
+                >
+                    Adopta
+                </a>
+                <a 
+                    [routerLink]="['/apadrina']" 
+                    class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                    (click)="closeMenu()"
+                >
+                    Apadrina
+                </a>
+                <a 
+                    [routerLink]="['/blog']" 
+                    class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                    (click)="closeMenu()"
+                >
+                    Blog
+                </a>
+                <a 
+                    [routerLink]="['/nosotros']" 
+                    class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                    (click)="closeMenu()"
+                >
+                    Nosotros
+                </a>
+                
+                <!-- Botón de Donaciones Móvil -->
+                <a 
+                    [routerLink]="['/donaciones']"
+                    class="block text-center bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white py-2 rounded-full transition-colors font-medium shadow-md"
+                    (click)="closeMenu()"
+                >
+                    Donaciones
+                </a>
+                
+                <!-- Botón Iniciar Sesión Móvil -->
+                <button 
+                    class="w-full flex items-center justify-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 py-2 rounded-full transition-colors font-medium"
+                    (click)="openLoginModal($event); closeMenu()"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Iniciar Sesión
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
