@@ -33,13 +33,8 @@ export class NavigationComponent {
   /**
    * Abre el modal de login.
    */
-  public openLoginModal(event?: MouseEvent): void {
-    // Si se presiona Ctrl+Click, mostrar modo admin
-    if (event?.ctrlKey) {
-      this.loginModal.showWithAdminAccess();
-    } else {
-      this.loginModal.show();
-    }
+  public openLoginModal(): void {
+    this.loginModal.show();
     
     if (this.isOpen()) {
       this.closeMenu();

@@ -32,7 +32,7 @@
                     Donaciones
                 </a>
                 <button 
-                    (click)="openLoginModal($event)"
+                    (click)="openLoginModal()"
                     class="flex items-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 px-4 py-2 rounded-full transition-colors font-medium">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     Iniciar sesión
@@ -93,7 +93,7 @@
                 <!-- Botón Iniciar Sesión Móvil -->
                 <button 
                     class="w-full flex items-center justify-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 py-2 rounded-full transition-colors font-medium"
-                    (click)="openLoginModal($event); closeMenu()"
+                    (click)="openLoginModal(); closeMenu()"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     Iniciar Sesión
