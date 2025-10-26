@@ -2,6 +2,9 @@ package com.adoptacat.backend.service;
 
 import com.adoptacat.backend.model.Cat;
 import com.adoptacat.backend.repository.CatRepository;
+import com.adoptacat.backend.util.AdoptaCatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +21,13 @@ import java.util.Optional;
 @Transactional
 public class CatService {
     
+    private static final Logger logger = LoggerFactory.getLogger(CatService.class);
+    
     @Autowired
     private CatRepository catRepository;
+    
+    @Autowired
+    private AdoptaCatUtils utils;
     
     // Obtener todos los gatos disponibles
     public List<Cat> getAllAvailableCats() {
@@ -88,12 +96,34 @@ public class CatService {
     
     // Crear nuevo gato
     public Cat createCat(Cat cat) {
+        logger.info("Creando nuevo gato: {}", cat.getName());
+        
+        // Validar y sanitizar datos
+        if (cat.getName() != null) {
+            cat.setName(utils.validateAndSanitizeName(cat.getName()));
+        }
+        
+        if (cat.getDescription() != null) {
+            cat.setDescription(utils.validateAndSanitizeText(cat.getDescription()));
+        }
+        
+        if (cat.getStory() != null) {
+            cat.setStory(utils.validateAndSanitizeText(cat.getStory()));
+        }
+        
         if (cat.getId() == null || cat.getId().trim().isEmpty()) {
-            cat.setId(generateCatId());
+            cat.setId(utils.generateCatId());
+        }
+        
+        // Validar que el ID sea alfanumérico
+        if (!utils.isValidAlphanumericId(cat.getId())) {
+            logger.warn("Intento de crear gato con ID inválido: {}", cat.getId());
+            throw new IllegalArgumentException("El ID del gato debe ser alfanumérico");
         }
         
         // Validar que el ID no exista
         if (catRepository.existsById(cat.getId())) {
+            logger.warn("Intento de crear gato con ID duplicado: {}", cat.getId());
             throw new IllegalArgumentException("Ya existe un gato con el ID: " + cat.getId());
         }
         
@@ -114,7 +144,14 @@ public class CatService {
             cat.setIsSpecialNeeds(false);
         }
         
-        return catRepository.save(cat);
+        Cat savedCat = catRepository.save(cat);
+        
+        utils.logAuditAction("CREATE_CAT", "ADMIN", 
+            "Gato creado: " + savedCat.getId() + " - " + savedCat.getName());
+        
+        logger.info("Gato creado exitosamente: {} - {}", savedCat.getId(), savedCat.getName());
+        
+        return savedCat;
     }
     
     // Actualizar gato
@@ -204,12 +241,5 @@ public class CatService {
     // Verificar si existe un gato
     public boolean existsById(String id) {
         return catRepository.existsById(id);
-    }
-    
-    // Método privado para generar ID del gato
-    private String generateCatId() {
-        String prefix = "CAT";
-        long timestamp = System.currentTimeMillis();
-        return prefix + timestamp;
     }
 }
