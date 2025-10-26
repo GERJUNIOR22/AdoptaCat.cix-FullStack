@@ -403,7 +403,7 @@ export class AdoptionComponent {
     
     const routeName = routeMap[cat.id];
     if (routeName) {
-      this.router.navigate(['/gatos', routeName]);
+      this.router.navigate(['/adopta', routeName]);
     }
   }
 
