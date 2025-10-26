@@ -1,6 +1,8 @@
 [build]
-publish = "frontend/dist/frontend"
-command = "npm run build"
+<<<<<<< HEAD
+	base = "frontend"
+	publish = "dist/frontend"
+	command = "npm run build"
 
 [[redirects]]
   from = "/*"
