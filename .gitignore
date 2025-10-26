@@ -20,4 +20,6 @@ frontend/dist/
 
 # Others
 *.log
+/logs/
+logs/
 coverage/# Ignore local spring configs\nbackend/src/main/resources/application-*.properties\n# node modules and builds\nfrontend/node_modules\n**/target\n
