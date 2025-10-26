@@ -11,27 +11,22 @@ export const routes: Routes = [
   },
   {
     path: 'adopta',
-    loadComponent: () => import('./features/home/pages/home.component').then(m => m.HomeComponent)
+    loadComponent: () => import('./features/adoption/pages/adoption.component').then(m => m.AdoptionComponent)
   },
-  // Placeholder routes for future development
   {
     path: 'apadrina',
-    redirectTo: '/',
-    pathMatch: 'full'
+    loadComponent: () => import('./features/sponsor/pages/sponsor.component').then(m => m.SponsorComponent)
   },
   {
     path: 'blog',
-    redirectTo: '/',
-    pathMatch: 'full'
+    loadComponent: () => import('./features/blog/pages/blog.component').then(m => m.BlogComponent)
   },
   {
     path: 'nosotros',
-    redirectTo: '/',
-    pathMatch: 'full'
+    loadComponent: () => import('./features/about/pages/about.component').then(m => m.AboutComponent)
   },
   {
     path: 'donaciones',
-    redirectTo: '/',
-    pathMatch: 'full'
+    loadComponent: () => import('./features/donations/pages/donations.component').then(m => m.DonationsComponent)
   }
 ];
