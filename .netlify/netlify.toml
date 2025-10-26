@@ -13,7 +13,7 @@ pinned_version = "6"
 [plugins.inputs]
 
 [build]
-publish = "D:\\GitHubDesktop\\AdoptaCat.cix-FullStack\\frontend\\dist\\frontend"
+publish = "D:\\GitHubDesktop\\AdoptaCat.cix-FullStack\\frontend\\dist\\frontend\\browser"
 publishOrigin = "config"
 commandOrigin = "config"
 base = "D:\\GitHubDesktop\\AdoptaCat.cix-FullStack\\frontend"
