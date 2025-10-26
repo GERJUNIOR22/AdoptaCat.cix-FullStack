@@ -188,8 +188,13 @@
   </section>
 
   <!-- Modal: Adopción responsable -->
-  <div *ngIf="showAdoptionModal()" class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" (click)="closeAdoptionModal()">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" (click)="$event.stopPropagation()">
+  <div *ngIf="showAdoptionModal()" 
+       class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" 
+       (click)="closeAdoptionModal()" 
+       (keydown.escape)="closeAdoptionModal()">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" 
+         (click)="$event.stopPropagation()"
+         (keydown)="$event.stopPropagation()">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-2xl font-bold text-gray-900">Adopción responsable</h3>
         <button (click)="closeAdoptionModal()" class="text-gray-500 hover:text-gray-700 p-1">
@@ -224,8 +229,13 @@
   </div>
 
   <!-- Modal: Donaciones agua y comida -->
-  <div *ngIf="showDonationModal()" class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" (click)="closeDonationModal()">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" (click)="$event.stopPropagation()">
+  <div *ngIf="showDonationModal()" 
+       class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" 
+       (click)="closeDonationModal()" 
+       (keydown.escape)="closeDonationModal()">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" 
+         (click)="$event.stopPropagation()"
+         (keydown)="$event.stopPropagation()">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-2xl font-bold text-gray-900">Donaciones agua y comida</h3>
         <button (click)="closeDonationModal()" class="text-gray-500 hover:text-gray-700 p-1">
@@ -265,8 +275,13 @@
   </div>
 
   <!-- Modal: Salud y esterilización -->
-  <div *ngIf="showHealthModal()" class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" (click)="closeHealthModal()">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" (click)="$event.stopPropagation()">
+  <div *ngIf="showHealthModal()" 
+       class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" 
+       (click)="closeHealthModal()" 
+       (keydown.escape)="closeHealthModal()">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" 
+         (click)="$event.stopPropagation()"
+         (keydown)="$event.stopPropagation()">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-2xl font-bold text-gray-900">Salud y esterilización</h3>
         <button (click)="closeHealthModal()" class="text-gray-500 hover:text-gray-700 p-1">
@@ -307,8 +322,13 @@
   </div>
 
   <!-- Modal: Educación y tenencia -->
-  <div *ngIf="showEducationModal()" class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" (click)="closeEducationModal()">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" (click)="$event.stopPropagation()">
+  <div *ngIf="showEducationModal()" 
+       class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm p-4" 
+       (click)="closeEducationModal()" 
+       (keydown.escape)="closeEducationModal()">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6" 
+         (click)="$event.stopPropagation()"
+         (keydown)="$event.stopPropagation()">">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-2xl font-bold text-gray-900">Educación y tenencia</h3>
         <button (click)="closeEducationModal()" class="text-gray-500 hover:text-gray-700 p-1">
