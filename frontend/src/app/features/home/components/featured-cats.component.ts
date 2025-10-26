@@ -34,7 +34,7 @@ import { Cat } from '../../../shared/models/cat.model';
               <p class="text-pink-600 font-medium mb-1">Doméstico Pelo Corto</p>
               <p class="text-gray-600 mb-3">2 años</p>
               <p class="text-pink-600 font-medium mb-4">Juguetona y Cariñosa</p>
-              <a [routerLink]="['/gatos', 'luna']" class="w-full bg-gradient-to-r from-pink-100 to-orange-100 hover:from-pink-200 hover:to-orange-200 text-gray-700 py-3 rounded-lg transition-colors font-medium inline-block text-center">
+              <a [routerLink]="['/adopta', 'luna']" class="w-full bg-gradient-to-r from-pink-100 to-orange-100 hover:from-pink-200 hover:to-orange-200 text-gray-700 py-3 rounded-lg transition-colors font-medium inline-block text-center">
                 Conocer más
               </a>
             </div>
@@ -57,7 +57,7 @@ import { Cat } from '../../../shared/models/cat.model';
               <p class="text-orange-600 font-medium mb-1">Atigrado</p>
               <p class="text-gray-600 mb-3">3 años</p>
               <p class="text-orange-600 font-medium mb-4">Tranquilo y Gentil</p>
-              <a [routerLink]="['/gatos', 'oliver']" class="w-full bg-gradient-to-r from-pink-100 to-orange-100 hover:from-pink-200 hover:to-orange-200 text-gray-700 py-3 rounded-lg transition-colors font-medium inline-block text-center">
+              <a [routerLink]="['/adopta', 'oliver']" class="w-full bg-gradient-to-r from-pink-100 to-orange-100 hover:from-pink-200 hover:to-orange-200 text-gray-700 py-3 rounded-lg transition-colors font-medium inline-block text-center">
                 Conocer más
               </a>
             </div>
@@ -79,7 +79,7 @@ import { Cat } from '../../../shared/models/cat.model';
               <p class="text-pink-600 font-medium mb-1">Siamés Mestizo</p>
               <p class="text-gray-600 mb-3">1 año</p>
               <p class="text-pink-600 font-medium mb-4">Curioso y Vocal</p>
-              <a [routerLink]="['/gatos', 'milo']" class="w-full bg-gradient-to-r from-pink-100 to-orange-100 hover:from-pink-200 hover:to-orange-200 text-gray-700 py-3 rounded-lg transition-colors font-medium inline-block text-center">
+              <a [routerLink]="['/adopta', 'milo']" class="w-full bg-gradient-to-r from-pink-100 to-orange-100 hover:from-pink-200 hover:to-orange-200 text-gray-700 py-3 rounded-lg transition-colors font-medium inline-block text-center">
                 Conocer más
               </a>
             </div>

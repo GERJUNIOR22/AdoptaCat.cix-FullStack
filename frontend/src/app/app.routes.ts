@@ -6,7 +6,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/home/pages/home.component').then(m => m.HomeComponent)
   },
   {
-    path: 'gatos/:id',
+    path: 'adopta/:id',
     loadComponent: () => import('./features/adoption/pages/cat-profile.component').then(m => m.CatProfileComponent)
   },
   {
