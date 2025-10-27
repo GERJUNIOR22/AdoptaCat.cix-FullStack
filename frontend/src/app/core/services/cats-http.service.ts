@@ -13,7 +13,7 @@ export interface CatFilters {
   isVaccinated?: boolean;
   isSterilized?: boolean;
   page?: number;
-  size?: number;
+  pageSize?: number;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
@@ -99,7 +99,7 @@ export class CatsHttpService {
     if (filters.isVaccinated !== undefined) params = params.set('isVaccinated', filters.isVaccinated.toString());
     if (filters.isSterilized !== undefined) params = params.set('isSterilized', filters.isSterilized.toString());
     if (filters.page !== undefined) params = params.set('page', filters.page.toString());
-    if (filters.size !== undefined) params = params.set('size', filters.size.toString());
+    if (filters.pageSize !== undefined) params = params.set('size', filters.pageSize.toString());
     if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
     if (filters.sortDirection) params = params.set('sortDirection', filters.sortDirection);
 

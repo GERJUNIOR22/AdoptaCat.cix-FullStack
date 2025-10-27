@@ -47,7 +47,8 @@ public class SecurityConfig {
                     "/api/adoption-applications/user/**",
                     "/api/adoption-applications/check/**",
                     "/actuator/health",
-                    "/actuator/info"
+                    "/actuator/info",
+                    "/h2-console/**"
                 ).permitAll()
                 
                 // Endpoints administrativos - Requieren autenticación
@@ -67,8 +68,8 @@ public class SecurityConfig {
             
             // Configuración de headers de seguridad
             .headers(headers -> headers
-                // Prevenir clickjacking
-                .frameOptions(FrameOptionsConfig::deny)
+                // Permitir frames para H2 console en desarrollo
+                .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 
                 // Configurar Content-Type Options
                 .contentTypeOptions(contentTypeOptions -> {})
