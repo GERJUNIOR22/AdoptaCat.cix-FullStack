@@ -4,6 +4,9 @@ import com.adoptacat.backend.model.AdoptionApplication;
 import com.adoptacat.backend.model.Cat;
 import com.adoptacat.backend.repository.AdoptionApplicationRepository;
 import com.adoptacat.backend.repository.CatRepository;
+import com.adoptacat.backend.util.AdoptaCatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,36 +23,79 @@ import java.util.Optional;
 @Transactional
 public class AdoptionApplicationService {
     
+    private static final Logger logger = LoggerFactory.getLogger(AdoptionApplicationService.class);
+    
     @Autowired
     private AdoptionApplicationRepository applicationRepository;
     
     @Autowired
     private CatRepository catRepository;
     
+    @Autowired
+    private AdoptaCatUtils utils;
+    
     // Crear nueva solicitud de adopción
     public AdoptionApplication createApplication(AdoptionApplication application) {
+        logger.info("Creando nueva solicitud de adopción para gato: {}", application.getCat().getId());
+        
+        // Validar y sanitizar datos usando las utilidades
+        if (application.getFullName() != null) {
+            application.setFullName(utils.validateAndSanitizeName(application.getFullName()));
+        }
+        
+        if (application.getEmail() != null) {
+            application.setEmail(utils.validateAndSanitizeEmail(application.getEmail()));
+        }
+        
+        if (application.getPhone() != null) {
+            application.setPhone(utils.validateAndSanitizePhone(application.getPhone()));
+        }
+        
+        // Sanitizar campos de texto libre
+        if (application.getWhyAdopt() != null) {
+            application.setWhyAdopt(utils.validateAndSanitizeText(application.getWhyAdopt()));
+        }
+        
+        if (application.getCurrentPetsDetails() != null) {
+            application.setCurrentPetsDetails(utils.validateAndSanitizeText(application.getCurrentPetsDetails()));
+        }
+        
+        if (application.getPreviousPetsDetails() != null) {
+            application.setPreviousPetsDetails(utils.validateAndSanitizeText(application.getPreviousPetsDetails()));
+        }
+        
         // Verificar que el gato existe y está disponible
         Optional<Cat> catOpt = catRepository.findById(application.getCat().getId());
         if (catOpt.isEmpty()) {
+            logger.warn("Intento de solicitud para gato inexistente: {}", application.getCat().getId());
             throw new IllegalArgumentException("El gato especificado no existe");
         }
         
         Cat cat = catOpt.get();
         if (cat.getAdoptionStatus() != Cat.AdoptionStatus.AVAILABLE) {
+            logger.warn("Intento de solicitud para gato no disponible: {}", cat.getId());
             throw new IllegalArgumentException("El gato no está disponible para adopción");
         }
         
         // Verificar que el usuario no haya aplicado previamente para este gato
         if (applicationRepository.hasUserAppliedForCat(cat, application.getEmail())) {
+            logger.warn("Usuario {} ya aplicó para el gato {}", application.getEmail(), cat.getId());
             throw new IllegalArgumentException("Ya has enviado una solicitud para este gato");
         }
         
         // Establecer valores por defecto
         application.setCat(cat);
         application.setStatus(AdoptionApplication.ApplicationStatus.PENDING);
-        application.setApplicationNumber(generateApplicationNumber());
+        application.setApplicationNumber(utils.generateApplicationNumber());
         
-        return applicationRepository.save(application);
+        AdoptionApplication savedApplication = applicationRepository.save(application);
+        
+        utils.logAuditAction("CREATE_APPLICATION", application.getEmail(), 
+            "Solicitud creada para gato: " + cat.getId());
+        
+        logger.info("Solicitud de adopción creada exitosamente: {}", savedApplication.getApplicationNumber());
+        
+        return savedApplication;
     }
     
     // Obtener todas las solicitudes
@@ -128,15 +174,22 @@ public class AdoptionApplicationService {
     
     // Actualizar estado de la solicitud
     public AdoptionApplication updateApplicationStatus(Long id, AdoptionApplication.ApplicationStatus newStatus, String adminNotes) {
+        logger.info("Actualizando estado de solicitud {} a {}", id, newStatus);
+        
         Optional<AdoptionApplication> appOpt = applicationRepository.findById(id);
         
         if (appOpt.isEmpty()) {
+            logger.warn("Intento de actualizar solicitud inexistente: {}", id);
             throw new IllegalArgumentException("No se encontró la solicitud con ID: " + id);
         }
         
         AdoptionApplication application = appOpt.get();
+        AdoptionApplication.ApplicationStatus previousStatus = application.getStatus();
+        
         application.setStatus(newStatus);
-        application.setAdminNotes(adminNotes);
+        if (adminNotes != null) {
+            application.setAdminNotes(utils.validateAndSanitizeText(adminNotes));
+        }
         application.setReviewDate(LocalDateTime.now());
         
         // Si la solicitud es aprobada, marcar el gato como pendiente
@@ -144,9 +197,21 @@ public class AdoptionApplicationService {
             Cat cat = application.getCat();
             cat.setAdoptionStatus(Cat.AdoptionStatus.PENDING);
             catRepository.save(cat);
+            
+            utils.logAuditAction("APPROVE_APPLICATION", "ADMIN", 
+                "Solicitud " + application.getApplicationNumber() + " aprobada para gato " + cat.getId());
         }
         
-        return applicationRepository.save(application);
+        AdoptionApplication savedApplication = applicationRepository.save(application);
+        
+        utils.logAuditAction("UPDATE_APPLICATION_STATUS", "ADMIN", 
+            "Solicitud " + application.getApplicationNumber() + " cambió de " + 
+            previousStatus + " a " + newStatus);
+        
+        logger.info("Estado de solicitud {} actualizado exitosamente de {} a {}", 
+            id, previousStatus, newStatus);
+        
+        return savedApplication;
     }
     
     // Aprobar solicitud
@@ -234,12 +299,5 @@ public class AdoptionApplicationService {
     // Obtener estadísticas por mes
     public List<Object[]> getApplicationStatsByMonth(LocalDateTime startDate, LocalDateTime endDate) {
         return applicationRepository.getApplicationStatsByMonth(startDate, endDate);
-    }
-    
-    // Método privado para generar número de aplicación
-    private String generateApplicationNumber() {
-        String prefix = "APP";
-        long timestamp = System.currentTimeMillis();
-        return prefix + timestamp;
     }
 }
