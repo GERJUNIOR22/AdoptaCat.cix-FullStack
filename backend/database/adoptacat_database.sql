@@ -417,26 +417,3 @@ CREATE INDEX idx_donations_reports ON donations(donation_type, status, created_a
 CREATE INDEX idx_adoptions_follow_up ON adoptions(follow_up_required, adoption_date);
 
 -- =====================================================
--- COMENTARIOS FINALES
--- =====================================================
--- Esta base de datos incluye SOLO lo que realmente existe en la página:
--- 
--- 1. ✅ Sistema de usuarios y autenticación
--- 2. ✅ Catálogo de gatos con galería de imágenes  
--- 3. ✅ Formulario de adopción con preguntas sobre gastos:
---    - "¿Quién cubriría los gastos?" (who_pays_expenses)
---    - "¿Cuentas con recursos para gastos veterinarios?" (has_vet_resources)
--- 4. ✅ Sistema de seguimiento post-adopción
--- 5. ✅ Sistema de donaciones con propósitos (incluyendo 'VETERINARY')
--- 6. ✅ Blog con categoría 'EVENTS' para eventos/talleres
--- 7. ✅ Configuración del sistema con:
---    - Costos de adopción S/.150-250 (adoption_fee_min/max)
---    - Meta de 200kg alimento mensual (food_goal_monthly)
---    - 150 gatos beneficiados (cats_benefited)
---
--- TEXTO ESTÁTICO EN LA PÁGINA (NO son datos de BD):
--- ❌ Voluntarios específicos (solo se mencionan en about.component)
--- ❌ Actividades detalladas de voluntariado (solo texto en modales)
--- ❌ Eventos específicos como "Entendiendo a tu gato" (solo texto estático)
--- ❌ Gastos veterinarios detallados por gato (solo costos en FAQ)
--- =====================================================
