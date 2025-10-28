@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login-modal',
@@ -8,8 +9,8 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   template: `
     @if (isVisible()) {
-      <div class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm" 
-           (click)="closeModal()">
+      <div *ngIf="isVisible()" class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm" 
+          (click)="closeModal()">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4" 
              (click)="$event.stopPropagation()">
           
@@ -181,25 +182,11 @@ export class LoginModalComponent {
   }
 
   // Social Login Methods
-  async loginWithGoogle() {
-    this.isLoading.set(true);
-    try {
-      // TODO: Implementar Google OAuth
-      console.log('Login with Google');
-      
-      // Simulación de login exitoso
-      setTimeout(() => {
-        this.isLoading.set(false);
-        this.closeModal();
-        // TODO: Guardar token de usuario y redirigir según el tipo de usuario
-        alert('¡Bienvenido! Login con Google exitoso (demo)');
-      }, 2000);
-      
-    } catch (error) {
-      this.isLoading.set(false);
-      console.error('Error logging in with Google:', error);
-    }
+  loginWithGoogle() {
+    // Redirige al backend para iniciar OAuth2 con Google
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
+
 
   async loginWithFacebook() {
     this.isLoading.set(true);
@@ -260,5 +247,7 @@ export class LoginModalComponent {
       this.loginError.set('Error al iniciar sesión. Verifica tus credenciales.');
       console.error('Error logging in:', error);
     }
+
+    
   }
 }

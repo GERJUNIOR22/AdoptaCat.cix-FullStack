@@ -1,10 +1,11 @@
 package com.adoptacat.backend.config;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,8 +14,7 @@ import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWrite
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Configuración de seguridad mejorada para AdoptaCat
@@ -23,7 +23,10 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
+    @Autowired
+    private OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -33,9 +36,9 @@ public class SecurityConfig {
             // Configuración CSRF - Deshabilitado para APIs REST
             .csrf(csrf -> csrf.disable())
             
-            // Configuración de sesiones - Stateless para APIs REST
-            .sessionManagement(session -> 
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            // Configuración de sesiones - IF_REQUIRED para OAuth2
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             
             // Configuración de autorización
             .authorizeHttpRequests(authz -> authz
@@ -48,7 +51,8 @@ public class SecurityConfig {
                     "/api/adoption-applications/check/**",
                     "/actuator/health",
                     "/actuator/info",
-                    "/h2-console/**"
+                    "/h2-console/**",
+                    "/oauth2/**"
                 ).permitAll()
                 
                 // Endpoints administrativos - Requieren autenticación
@@ -65,7 +69,12 @@ public class SecurityConfig {
                 // Cualquier otra solicitud requiere autenticación
                 .anyRequest().authenticated()
             )
-            
+            // Configuración de login con Google OAuth2
+            .oauth2Login(oauth2 -> oauth2
+                .successHandler(oauth2LoginSuccessHandler)
+                .failureUrl("/login?error=true")
+            )
+ 
             // Configuración de headers de seguridad
             .headers(headers -> headers
                 // Permitir frames para H2 console en desarrollo
@@ -107,8 +116,7 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:*",
             "http://127.0.0.1:*",
-            "https://adoptacat.com",
-            "https://*.adoptacat.com"
+            "https://adopcatcix.netlify.app"
         ));
         
         // Métodos HTTP permitidos
