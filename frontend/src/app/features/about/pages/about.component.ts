@@ -364,7 +364,7 @@ export class AboutComponent implements OnInit {
   selectedMember = signal<TeamMember | null>(null);
 
   ngOnInit(): void {
-    this.titleService.setTitle('AdoptaCat - Nosotros');
+    this.titleService.setTitle('Nosotros | AdopCat');
   }
   
   teamMembers = signal<TeamMember[]>([
