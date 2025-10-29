@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 
 interface SponsorshipPlan {
   id: number;
@@ -196,8 +197,14 @@ interface SponsoredCat {
     }
   `]
 })
-export class SponsorComponent {
+export class SponsorComponent implements OnInit {
+  private titleService = inject(Title);
+
   showPaymentModal = signal<boolean>(false);
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Apadrina | AdopCat');
+  }
   selectedDonationType = signal<string>('');
 
   showPaymentOptions(type: string) {

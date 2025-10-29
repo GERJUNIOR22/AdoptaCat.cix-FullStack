@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 interface BlogPost {
   id: number;
@@ -289,8 +290,14 @@ interface BlogCategory {
     }
   `]
 })
-export class BlogComponent {
+export class BlogComponent implements OnInit {
+  private titleService = inject(Title);
+
   public activeCategory = signal<string>('all');
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Blog | AdopCat');
+  }
 
   public categories: BlogCategory[] = [
     { id: 'all', name: 'Todos', count: 15 },

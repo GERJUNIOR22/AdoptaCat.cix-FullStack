@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { HeroComponent } from '../components/hero.component';
 import { FeaturedCatsComponent } from '../components/featured-cats.component';
 
@@ -11,7 +12,9 @@ import { FeaturedCatsComponent } from '../components/featured-cats.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  private titleService = inject(Title);
+
   // Signals para controlar los modales
   public showAdoptionModal = signal(false);
   public showDonationModal = signal(false);
@@ -20,6 +23,10 @@ export class HomeComponent {
 
   // Signal para controlar el acordeón de FAQ
   public activeFaqIndex = signal<number | null>(null);
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Inicio | AdopCat');
+  }
 
   // Métodos para abrir modales
   public openAdoptionModal(): void {

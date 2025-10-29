@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
@@ -14,7 +15,10 @@ export class LoginSuccessComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  private titleService = inject(Title);
+
   ngOnInit() {
+    this.titleService.setTitle('AdoptaCat - Iniciando Sesión');
     this.route.queryParams.subscribe(params => {
       const name = params['name'];
       const email = params['email'];

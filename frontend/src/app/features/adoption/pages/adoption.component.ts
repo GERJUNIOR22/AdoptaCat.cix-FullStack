@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 interface Cat {
   id: number;
@@ -281,14 +282,20 @@ interface Cat {
     .bg-cat-6 { background: linear-gradient(45deg, #6b7280, #4b5563); }
   `]
 })
-export class AdoptionComponent {
+export class AdoptionComponent implements OnInit {
+  private titleService = inject(Title);
+
   // Signal para el filtro seleccionado
   public selectedFilter = signal<string>('all');
-  
+
   // Signal para el gato seleccionado en el modal
   public selectedCat = signal<Cat | null>(null);
 
   constructor(private readonly router: Router) {}
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Adopta | AdopCat');
+  }
 
   // Datos de los gatos disponibles
   public cats: Cat[] = [
