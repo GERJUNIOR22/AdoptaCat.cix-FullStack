@@ -37,7 +37,7 @@ import { WhatsappConfigService } from '../../services/whatsapp-config.service';
       
       <!-- Tooltip -->
       <div class="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-        <div class="bg-gray-800 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap max-w-xs">
+        <div class="bg-gray-800 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap max-w-xs font-sans">
           {{ getTooltipMessage() }}
           <div class="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
         </div>

@@ -5,6 +5,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        // Fuente principal (Poppins para toda la aplicación)
+        'sans': ['Poppins', 'system-ui', 'sans-serif'],
+        
+        // Fuentes específicas
+        'poppins': ['Poppins', 'sans-serif'],
+        'inter': ['Inter', 'sans-serif'],
+        
+        // Para casos especiales (usar con moderación)
+        'nunito': ['Nunito', 'sans-serif'],
+        'outfit': ['Outfit', 'sans-serif'],
+        
+        // Aliases semánticos
+        'display': ['Poppins', 'sans-serif'],
+        'body': ['Poppins', 'sans-serif'],
+        'reading': ['Inter', 'Poppins', 'sans-serif'], // Para textos largos
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

@@ -16,22 +16,22 @@
 
              <!-- Desktop Navigation -->
              <div class="hidden md:flex items-center gap-8">
-                 <a [routerLink]="['/']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                 <a [routerLink]="['/']" class="text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium">
                      Inicio
                  </a>
-                 <a [routerLink]="['/adopta']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                 <a [routerLink]="['/adopta']" class="text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium">
                      Adopta
                  </a>
-                <a [routerLink]="['/apadrina']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                <a [routerLink]="['/apadrina']" class="text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium">
                     Apadrina
                 </a>
-                <a [routerLink]="['/blog']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                <a [routerLink]="['/blog']" class="text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium">
                     Blog
                 </a>
-                <a [routerLink]="['/nosotros']" class="text-rose-700 hover:text-rose-600 transition-colors font-medium">
+                <a [routerLink]="['/nosotros']" class="text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium">
                     Nosotros
                 </a>
-                <a [routerLink]="['/donaciones']" class="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-6 py-2 rounded-full transition-colors font-medium shadow-md">
+                <a [routerLink]="['/donaciones']" class="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-6 py-2 rounded-full transition-colors font-poppins font-semibold shadow-md">
                     Donaciones
                 </a>
 
@@ -90,12 +90,12 @@
                  <div *ngIf="!user()" class="flex items-center gap-2">
                      <button
                          (click)="openLoginModal()"
-                         class="border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 px-4 py-2 rounded-full transition-colors font-medium">
+                         class="border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 px-4 py-2 rounded-full transition-colors font-poppins font-medium">
                          Iniciar Sesión
                      </button>
                      <button
                          (click)="openRegisterModal()"
-                         class="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-4 py-2 rounded-full transition-colors font-medium">
+                         class="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-4 py-2 rounded-full transition-colors font-poppins font-semibold">
                          Registrarse
                      </button>
                  </div>
@@ -116,35 +116,35 @@
              <div class="py-4 space-y-4 border-t border-rose-200">
                  <a
                      [routerLink]="['/']"
-                     class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                     class="block text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium"
                      (click)="closeMenu()"
                  >
                      Inicio
                  </a>
                  <a
                      [routerLink]="['/adopta']"
-                     class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                     class="block text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium"
                      (click)="closeMenu()"
                  >
                      Adopta
                  </a>
                 <a 
                     [routerLink]="['/apadrina']" 
-                    class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                    class="block text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium"
                     (click)="closeMenu()"
                 >
                     Apadrina
                 </a>
                 <a 
                     [routerLink]="['/blog']" 
-                    class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                    class="block text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium"
                     (click)="closeMenu()"
                 >
                     Blog
                 </a>
                 <a 
                     [routerLink]="['/nosotros']" 
-                    class="block text-rose-700 hover:text-rose-600 transition-colors font-medium"
+                    class="block text-rose-700 hover:text-rose-600 transition-colors font-poppins font-medium"
                     (click)="closeMenu()"
                 >
                     Nosotros
@@ -153,7 +153,7 @@
                 <!-- Botón de Donaciones Móvil -->
                 <a 
                     [routerLink]="['/donaciones']"
-                    class="block text-center bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white py-2 rounded-full transition-colors font-medium shadow-md"
+                    class="block text-center bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white py-2 rounded-full transition-colors font-poppins font-semibold shadow-md"
                     (click)="closeMenu()"
                 >
                     Donaciones
@@ -172,7 +172,7 @@
                       </div>
                       <a
                           [routerLink]="['/perfil']"
-                          class="w-full flex items-center justify-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 py-2 rounded-full transition-colors font-medium mb-2"
+                          class="w-full flex items-center justify-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 py-2 rounded-full transition-colors font-poppins font-medium mb-2"
                           (click)="closeMenu()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
                               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -182,7 +182,7 @@
                       </a>
                       <button
                           (click)="logout(); closeMenu()"
-                          class="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-full transition-colors font-medium">
+                          class="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-full transition-colors font-poppins font-medium">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
                               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                               <polyline points="16,17 21,12 16,7"/>
@@ -195,12 +195,12 @@
                   <!-- Botones Iniciar Sesión y Registrarse Móvil when not logged in -->
                   <div *ngIf="!user()" class="flex flex-col gap-2">
                       <button
-                          class="w-full flex items-center justify-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 py-2 rounded-full transition-colors font-medium"
+                          class="w-full flex items-center justify-center gap-2 border border-rose-300 hover:border-rose-500 text-rose-700 hover:text-rose-600 py-2 rounded-full transition-colors font-poppins font-medium"
                           (click)="openLoginModal(); closeMenu()">
                           Iniciar Sesión
                       </button>
                       <button
-                          class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white py-2 rounded-full transition-colors font-medium"
+                          class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white py-2 rounded-full transition-colors font-poppins font-semibold"
                           (click)="openRegisterModal(); closeMenu()">
                           Registrarse
                       </button>

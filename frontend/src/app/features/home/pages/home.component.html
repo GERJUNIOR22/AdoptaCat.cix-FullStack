@@ -17,22 +17,22 @@
         </div>
         <!-- Contenido -->
         <div class="space-y-6">
-          <h2 class="text-4xl font-bold text-rose-800">Dedicados al Bienestar Felino</h2>
+          <h2 class="text-4xl font-bold text-rose-800 font-sans">Dedicados al Bienestar Felino</h2>
           <div class="space-y-4 text-rose-700">
-            <p class="text-lg">
+            <p class="text-lg font-reading">
               AdoptaCat es una comunidad compasiva donde los gatos y las personas 
               se unen para crear vínculos duraderos. Rescatamos, rehabilitamos y 
               reubicamos gatos necesitados, asegurando que cada uno encuentre su 
               pareja perfecta.
             </p>
-            <p class="text-lg">
+            <p class="text-lg font-reading">
               Nuestra misión es simple: cada gato merece un hogar amoroso, y cada 
               hogar merece la alegría que trae un gato. Emparejamos cuidadosamente 
               personalidades y estilos de vida para crear adopciones armoniosas.
             </p>
           </div>
           <div class="flex gap-4">
-            <a [routerLink]="['/nosotros']" class="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-6 py-3 rounded-full font-medium transition-colors shadow-md">
+            <a [routerLink]="['/nosotros']" class="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-6 py-3 rounded-full font-medium transition-colors shadow-md font-sans">
               Conoce nuestra historia
             </a>
           </div>
@@ -45,7 +45,7 @@
   <section class="py-20 bg-rose-25">
     <div class="container mx-auto px-4">
       <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold text-rose-800 mb-6">¿Por qué adoptar un gato?</h2>
+        <h2 class="text-4xl font-bold text-rose-800 mb-6 font-sans">¿Por qué adoptar un gato?</h2>
       </div>
 
       <!-- Grid de beneficios -->
@@ -55,8 +55,8 @@
           <div class="w-20 h-20 mx-auto mb-6 bg-rose-100 rounded-full flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-600"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </div>
-          <h3 class="text-xl font-semibold text-rose-800 mb-3">Es un gato seguro y agradecido</h3>
-          <p class="text-rose-600 text-sm leading-relaxed">
+          <h3 class="text-xl font-semibold text-rose-800 mb-3 font-sans">Es un gato seguro y agradecido</h3>
+          <p class="text-rose-600 text-sm leading-relaxed font-reading">
             Los gatos rescatados muestran un amor y gratitud incomparables
           </p>
         </div>
@@ -66,8 +66,8 @@
           <div class="w-20 h-20 mx-auto mb-6 bg-pink-100 rounded-full flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-600"><path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/></svg>
           </div>
-          <h3 class="text-xl font-semibold text-rose-800 mb-3">Es un gato seguro y sano</h3>
-          <p class="text-rose-600 text-sm leading-relaxed">
+          <h3 class="text-xl font-semibold text-rose-800 mb-3 font-sans">Es un gato seguro y sano</h3>
+          <p class="text-rose-600 text-sm leading-relaxed font-reading">
             Todos nuestros gatos están vacunados, esterilizados y saludables
           </p>
         </div>
@@ -77,8 +77,8 @@
           <div class="w-20 h-20 mx-auto mb-6 bg-rose-100 rounded-full flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-600"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m22 21-3-3"/><circle cx="20" cy="8" r="3"/></svg>
           </div>
-          <h3 class="text-xl font-semibold text-rose-800 mb-3">Tienes un equipo de apoyo</h3>
-          <p class="text-rose-600 text-sm leading-relaxed">
+          <h3 class="text-xl font-semibold text-rose-800 mb-3 font-sans">Tienes un equipo de apoyo</h3>
+          <p class="text-rose-600 text-sm leading-relaxed font-reading">
             Contarás con apoyo continuo de nuestro equipo de expertos
           </p>
         </div>
@@ -88,7 +88,7 @@
 
       <!-- Botón CTA -->
       <div class="text-center mt-16">
-        <a [routerLink]="['/adopta']" class="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-8 py-4 rounded-full text-lg font-medium transition-colors shadow-lg hover:shadow-xl inline-block">
+        <a [routerLink]="['/adopta']" class="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-8 py-4 rounded-full text-lg font-medium transition-colors shadow-lg hover:shadow-xl inline-block font-sans">
           ¡Quiero adoptar ahora!
         </a>
       </div>
@@ -99,8 +99,8 @@
   <section class="py-20 bg-gray-50">
     <div class="container mx-auto px-4">
       <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold text-gray-900 mb-6">Preguntas Frecuentes</h2>
-        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+        <h2 class="text-4xl font-bold text-gray-900 mb-6 font-sans">Preguntas Frecuentes</h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto font-reading">
           Encuentra respuestas a las preguntas más comunes sobre el proceso de adopción
         </p>
       </div>
@@ -117,7 +117,7 @@
             [class.bg-gray-50]="activeFaqIndex() === i">
             
             <div class="flex justify-between items-center">
-              <h3 class="text-lg font-medium text-gray-900 pr-4">
+              <h3 class="text-lg font-medium text-gray-900 pr-4 font-sans">
                 {{ faq.question }}
               </h3>
               <svg 
@@ -141,7 +141,7 @@
           <div *ngIf="activeFaqIndex() === i" 
                class="px-6 pb-5 animate-fadeIn">
             <div class="pt-2 border-t border-gray-100">
-              <p class="text-gray-600 leading-relaxed">
+              <p class="text-gray-600 leading-relaxed font-reading">
                 {{ faq.answer }}
               </p>
             </div>
@@ -152,15 +152,15 @@
       <!-- CTA Final -->
       <div class="text-center mt-16">
         <div class="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto">
-          <h3 class="text-2xl font-semibold text-gray-900 mb-4">¿No encontraste tu respuesta?</h3>
-          <p class="text-gray-600 mb-6">
+          <h3 class="text-2xl font-semibold text-gray-900 mb-4 font-sans">¿No encontraste tu respuesta?</h3>
+          <p class="text-gray-600 mb-6 font-reading">
             Síguenos en Instagram y TikTok para más información y contacto directo con nuestro equipo.
           </p>
           <div class="flex flex-col sm:flex-row justify-center gap-4">
             <a 
               href="https://www.instagram.com/adopcat.cix/" 
               target="_blank"
-              class="inline-flex items-center bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105"
+              class="inline-flex items-center bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 font-sans"
             >
               <svg class="w-5 h-5 mr-2 fill-current" viewBox="0 0 24 24">
                 <path d="M12,2.163c3.204,0,3.584,0.012,4.85,0.07C17.889,2.31,18.454,2.483,18.91,2.711c0.561,0.276,0.962,0.606,1.383,1.026c0.421,0.421,0.751,0.822,1.027,1.383c0.228,0.456,0.401,1.021,0.478,2.06c0.058,1.266,0.07,1.646,0.07,4.85s-0.012,3.584-0.07,4.85c-0.077,1.039-0.25,1.604-0.478,2.06c-0.276,0.561-0.606,0.962-1.027,1.383c-0.421,0.421-0.822,0.751-1.383,1.027c-0.456,0.228-1.021,0.401-2.06,0.478c-1.266,0.058-1.646,0.07-4.85,0.07s-3.584-0.012-4.85-0.07C6.111,21.69,5.546,21.517,5.09,21.289c-0.561-0.276-0.962-0.606-1.383-1.027c-0.421-0.421-0.751-0.822-1.027-1.383c-0.228-0.456-0.401-1.021-0.478-2.06c-0.058-1.266-0.07-1.646-0.07-4.85s0.012-3.584,0.07-4.85C2.31,6.111,2.483,5.546,2.711,5.09C2.987,4.529,3.317,4.128,3.738,3.707C4.159,3.286,4.56,2.956,5.121,2.68c0.456-0.228,1.021-0.401,2.06-0.478C8.447,2.175,8.827,2.163,12,2.163 M12,0C8.741,0,8.333,0.014,7.053,0.072C5.775,0.131,4.905,0.333,4.14,0.63C3.351,0.936,2.681,1.347,2.014,2.014C1.347,2.681,0.935,3.35,0.63,4.14C0.333,4.905,0.131,5.775,0.072,7.053C0.014,8.333,0,8.741,0,12c0,3.259,0.014,3.668,0.072,4.948c0.059,1.277,0.261,2.148,0.558,2.913c0.306,0.788,0.717,1.459,1.384,2.126c0.667,0.666,1.336,1.079,2.124,1.384c0.766,0.296,1.636,0.499,2.913,0.558C8.333,23.986,8.741,24,12,24c3.259,0,3.668-0.014,4.948-0.072c1.277-0.059,2.148-0.262,2.913-0.558c0.788-0.306,1.459-0.718,2.126-1.384c0.666-0.667,1.079-1.335,1.384-2.126c0.296-0.765,0.499-1.636,0.558-2.913c0.058-1.28,0.072-1.689,0.072-4.948c0-3.259-0.014-3.667-0.072-4.947c-0.059-1.277-0.262-2.149-0.558-2.913c-0.306-0.789-0.718-1.459-1.384-2.126C21.319,1.347,20.651,0.935,19.86,0.63C19.095,0.333,18.225,0.131,16.947,0.072C15.668,0.014,15.259,0,12,0z M12,5.838c-3.403,0-6.162,2.759-6.162,6.162c0,3.403,2.759,6.162,6.162,6.162s6.162-2.759,6.162-6.162C18.162,8.597,15.403,5.838,12,5.838z M12,16c-2.209,0-4-1.791-4-4s1.791-4,4-4s4,1.791,4,4S14.209,16,12,16z M19.846,4.595c0,0.795-0.646,1.441-1.441,1.441c-0.795,0-1.441-0.646-1.441-1.441c0-0.795,0.646-1.441,1.441-1.441C19.199,3.154,19.846,3.8,19.846,4.595z"/>
@@ -170,7 +170,7 @@
             <a 
               href="https://www.tiktok.com/@adopcat.cix" 
               target="_blank"
-              class="inline-flex items-center bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105"
+              class="inline-flex items-center bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 font-sans"
             >
               <svg class="w-5 h-5 mr-2 fill-current" viewBox="0 0 24 24">
                 <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
@@ -192,20 +192,20 @@
          (click)="$event.stopPropagation()"
          (keydown)="$event.stopPropagation()">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-2xl font-bold text-gray-900">Adopción responsable</h3>
+        <h3 class="text-2xl font-bold text-gray-900 font-sans">Adopción responsable</h3>
         <button (click)="closeAdoptionModal()" class="text-gray-500 hover:text-gray-700 p-1">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
       </div>
       <div class="space-y-4">
-        <p class="text-gray-600">
+        <p class="text-gray-600 font-reading">
           Promovemos la adopción responsable conectando gatos rescatados con familias amorosas. 
           Cada adopción incluye evaluación de compatibilidad, seguimiento post-adopción y 
           asesoría continua para garantizar el bienestar del gato y la satisfacción de la familia adoptante.
         </p>
         <div class="space-y-2">
-          <h4 class="font-semibold text-gray-900">Nuestro proceso incluye:</h4>
-          <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+          <h4 class="font-semibold text-gray-900 font-sans">Nuestro proceso incluye:</h4>
+          <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 font-reading">
             <li>Entrevista personal con adoptantes</li>
             <li>Visita domiciliaria de seguridad</li>
             <li>Período de adaptación supervisado</li>
@@ -213,10 +213,10 @@
           </ul>
         </div>
         <div class="flex gap-3 pt-4">
-          <button class="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white py-2 rounded-lg font-medium transition-colors">
+          <button class="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white py-2 rounded-lg font-medium transition-colors font-sans">
             Quiero adoptar
           </button>
-          <button (click)="closeAdoptionModal()" class="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 rounded-lg font-medium transition-colors">
+          <button (click)="closeAdoptionModal()" class="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 rounded-lg font-medium transition-colors font-sans">
             Cerrar
           </button>
         </div>
