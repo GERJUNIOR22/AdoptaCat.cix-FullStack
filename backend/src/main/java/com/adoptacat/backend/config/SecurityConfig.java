@@ -14,7 +14,6 @@ import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWrite
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Configuración de seguridad mejorada para AdoptaCat
@@ -24,8 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+    private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+
+    public SecurityConfig(OAuth2LoginSuccessHandler oauth2LoginSuccessHandler) {
+        this.oauth2LoginSuccessHandler = oauth2LoginSuccessHandler;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -140,6 +142,8 @@ public class SecurityConfig {
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/oauth2/**", configuration);
+        source.registerCorsConfiguration("/login/**", configuration);
         
         return source;
     }
