@@ -25,12 +25,13 @@ export const routes: Routes = [
     path: 'nosotros',
     loadComponent: () => import('./features/about/pages/about.component').then(m => m.AboutComponent)
   },
-  {
-    path: 'donaciones',
-    loadComponent: () => import('./features/donations/pages/donations.component').then(m => m.DonationsComponent)
-  },
-  {
-    path: 'login/success',
-    loadComponent: () => import('./features/auth/pages/login-success.component').then(m => m.LoginSuccessComponent)
-  }
-];
+   {
+     path: 'donaciones',
+     loadComponent: () => import('./features/donations/pages/donations.component').then(m => m.DonationsComponent)
+   },
+   {
+     path: 'perfil',
+     loadComponent: () => import('./features/profile/pages/profile.component').then(m => m.ProfileComponent)
+   }
+
+ ];

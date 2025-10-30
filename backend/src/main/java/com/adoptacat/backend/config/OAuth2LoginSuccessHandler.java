@@ -18,7 +18,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String name = oauth2User.getAttribute("name");
         String email = oauth2User.getAttribute("email");
 
-        String redirectUrl = "http://localhost:4200/login/success?name=" + name + "&email=" + email;
+        String redirectUrl = "http://localhost:4200/?name=" + name + "&email=" + email;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }

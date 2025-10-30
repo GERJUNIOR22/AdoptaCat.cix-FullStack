@@ -2,6 +2,8 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../shared/services/auth.service';
 import { HeroComponent } from '../components/hero.component';
 import { FeaturedCatsComponent } from '../components/featured-cats.component';
 
@@ -14,6 +16,9 @@ import { FeaturedCatsComponent } from '../components/featured-cats.component';
 })
 export class HomeComponent implements OnInit {
   private titleService = inject(Title);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
   // Signals para controlar los modales
   public showAdoptionModal = signal(false);
@@ -26,6 +31,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('Inicio | AdopCat');
+
+    // Check for login params from OAuth redirect
+    this.route.queryParams.subscribe(params => {
+      if (params['name'] && params['email']) {
+        this.authService.login({ name: params['name'], email: params['email'] });
+        // Clear query params
+        this.router.navigate([], { queryParams: {} });
+      }
+    });
   }
 
   // Métodos para abrir modales

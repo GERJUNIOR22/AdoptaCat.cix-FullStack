@@ -1,6 +1,7 @@
 package com.adoptacat.backend.controller;
 
 import com.adoptacat.backend.service.ExcelReportService;
+import com.adoptacat.backend.service.AdoptionReportService;
 import com.adoptacat.backend.util.AdoptaCatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Controlador para la generación de reportes en Excel
@@ -27,7 +32,10 @@ public class ReportController {
     
     @Autowired
     private ExcelReportService excelReportService;
-    
+
+    @Autowired
+    private AdoptionReportService adoptionReportService;
+
     @Autowired
     private AdoptaCatUtils utils;
     
@@ -124,6 +132,68 @@ public class ReportController {
         }
     }
     
+    /**
+     * Genera y descarga reporte de formularios de adopción usando librerías avanzadas
+     * Implementa Google Guava, Apache POI, Apache Commons y Logback
+     */
+    @GetMapping("/adoption-forms")
+    public ResponseEntity<byte[]> generateAdoptionFormsReport() {
+        try {
+            logger.info("Solicitud de reporte de formularios de adopción usando librerías avanzadas");
+
+            // Datos de ejemplo (en producción se obtendrían de la base de datos)
+            List<Map<String, Object>> sampleData = createSampleAdoptionData();
+
+            byte[] reportData = adoptionReportService.generateAdoptionReport(sampleData);
+
+            String filename = "formularios_adopcion_" +
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", filename);
+            headers.setContentLength(reportData.length);
+
+            utils.logAuditAction("DOWNLOAD_ADOPTION_FORMS_REPORT", "USER",
+                "Descarga de reporte de formularios de adopción: " + filename);
+
+            return new ResponseEntity<>(reportData, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            logger.error("Error generando reporte de formularios de adopción", e);
+            utils.logSecurityEvent("ADOPTION_REPORT_GENERATION_ERROR", "SYSTEM",
+                "Error al generar reporte de formularios: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Crea datos de ejemplo para formularios de adopción
+     */
+    private List<Map<String, Object>> createSampleAdoptionData() {
+        Map<String, Object> form1 = new HashMap<>();
+        form1.put("nombreCompleto", "Fiorella Huancas Jara");
+        form1.put("celular", "912624724");
+        form1.put("correoElectronico", "fiorellahuancasjara8@gmail.com");
+        form1.put("estadoCivil", "soltera");
+        form1.put("direccion", "José Leonardo Ortiz 240 a Pimentel");
+        form1.put("porqueAdoptar", "Tengo una gatita llamada mica pero me mudé y se quedó con mi mamá. Quiero una pero al ver la publicación de que son dos me daría pena separarlas.");
+        form1.put("tieneMascotasActuales", false);
+        form1.put("aceptoCondiciones", true);
+
+        Map<String, Object> form2 = new HashMap<>();
+        form2.put("nombreCompleto", "Juan Pérez");
+        form2.put("celular", "987654321");
+        form2.put("correoElectronico", "juan@example.com");
+        form2.put("estadoCivil", "casado");
+        form2.put("direccion", "Av. Principal 123");
+        form2.put("porqueAdoptar", "Me encantan los gatos y quiero darles un hogar amoroso.");
+        form2.put("tieneMascotasActuales", true);
+        form2.put("aceptoCondiciones", true);
+
+        return Arrays.asList(form1, form2);
+    }
+
     /**
      * Endpoint para verificar disponibilidad del servicio de reportes
      */
