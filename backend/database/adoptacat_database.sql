@@ -417,3 +417,85 @@ CREATE INDEX idx_donations_reports ON donations(donation_type, status, created_a
 CREATE INDEX idx_adoptions_follow_up ON adoptions(follow_up_required, adoption_date);
 
 -- =====================================================
+-- TABLA: PERFILES DE ADOPCIÓN
+-- =====================================================
+CREATE TABLE adoption_profiles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    
+    -- Información del Candidato
+    nombre_completo VARCHAR(255) NOT NULL,
+    celular VARCHAR(20) NOT NULL,
+    fecha_nacimiento DATE,
+    ciudad VARCHAR(100),
+    dni VARCHAR(20) NOT NULL,
+    estado_civil VARCHAR(50) NOT NULL,
+    direccion TEXT NOT NULL,
+    distrito VARCHAR(100) NOT NULL,
+    ocupacion VARCHAR(100),
+    correo_electronico VARCHAR(255) NOT NULL,
+    instagram VARCHAR(100),
+    facebook VARCHAR(100),
+    
+    -- PARTE 1: EXPERIENCIA CON MASCOTAS
+    porque_adoptar TEXT NOT NULL,
+    tiene_mascotas_actuales BOOLEAN DEFAULT FALSE,
+    cuales_mascotas_actuales TEXT,
+    mascotas_esterilizadas BOOLEAN,
+    porque_no_esterilizadas TEXT,
+    tuvo_mascotas_antes BOOLEAN DEFAULT FALSE,
+    cuales_mascotas_antes TEXT,
+    que_paso_con_ellas TEXT,
+    
+    -- PARTE 2: HOGAR
+    hay_ninos BOOLEAN DEFAULT FALSE,
+    edades_ninos VARCHAR(100),
+    cuantas_personas_casa INT NOT NULL,
+    todos_acuerdan BOOLEAN NOT NULL,
+    alguien_alergico BOOLEAN DEFAULT FALSE,
+    permiten_arrendadores BOOLEAN,
+    porque_cambiar_domicilio TEXT NOT NULL,
+    ruptura_familia TEXT NOT NULL,
+    
+    -- PARTE 3: RECREACIÓN Y PROYECCIÓN
+    espacio_suficiente BOOLEAN NOT NULL,
+    areas_ingreso_gato TEXT NOT NULL,
+    donde_duerme_gato TEXT NOT NULL,
+    espacios_escape BOOLEAN NOT NULL,
+    comportamiento_gato TEXT NOT NULL,
+    
+    -- PARTE 4: CUIDADOS Y GASTOS
+    responsable_gastos TEXT NOT NULL,
+    visitas_veterinario BOOLEAN DEFAULT FALSE,
+    vacunacion_vitaminas BOOLEAN DEFAULT FALSE,
+    placa_identificacion BOOLEAN DEFAULT FALSE,
+    agua_limpia BOOLEAN DEFAULT FALSE,
+    desparasitacion BOOLEAN DEFAULT FALSE,
+    cepillado_pelo BOOLEAN DEFAULT FALSE,
+    limpieza_arenero BOOLEAN DEFAULT FALSE,
+    alimentacion_croquetas BOOLEAN DEFAULT FALSE,
+    recursos_veterinarios BOOLEAN NOT NULL,
+    compromiso_esterilizar BOOLEAN NOT NULL,
+    acuerdo_visita_domiciliaria BOOLEAN NOT NULL,
+    
+    -- Aceptación y estado
+    acepto_condiciones BOOLEAN NOT NULL,
+    status ENUM('PENDING', 'APPROVED', 'REJECTED', 'UNDER_REVIEW') DEFAULT 'PENDING',
+    
+    -- Relación con usuario (opcional)
+    user_id BIGINT,
+    
+    -- Timestamps
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    -- Índices
+    INDEX idx_email (correo_electronico),
+    INDEX idx_status (status),
+    INDEX idx_dni (dni),
+    INDEX idx_created_at (created_at),
+    
+    -- Clave foránea (opcional)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- =====================================================

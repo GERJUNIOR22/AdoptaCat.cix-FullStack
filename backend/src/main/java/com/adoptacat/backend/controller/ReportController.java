@@ -5,7 +5,6 @@ import com.adoptacat.backend.service.AdoptionReportService;
 import com.adoptacat.backend.util.AdoptaCatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,14 +29,25 @@ public class ReportController {
     
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
     
-    @Autowired
-    private ExcelReportService excelReportService;
-
-    @Autowired
-    private AdoptionReportService adoptionReportService;
-
-    @Autowired
-    private AdoptaCatUtils utils;
+    // Constantes para evitar duplicación de strings literales
+    private static final String XLSX_EXTENSION = ".xlsx";
+    private static final String DATE_TIME_PATTERN = "yyyyMMdd_HHmmss";
+    private static final String ATTACHMENT_DISPOSITION = "attachment";
+    private static final String REPORT_GENERATION_ERROR = "REPORT_GENERATION_ERROR";
+    private static final String SYSTEM_USER = "SYSTEM";
+    
+    private final ExcelReportService excelReportService;
+    private final AdoptionReportService adoptionReportService;
+    private final AdoptaCatUtils utils;
+    
+    // Constructor injection
+    public ReportController(ExcelReportService excelReportService, 
+                          AdoptionReportService adoptionReportService,
+                          AdoptaCatUtils utils) {
+        this.excelReportService = excelReportService;
+        this.adoptionReportService = adoptionReportService;
+        this.utils = utils;
+    }
     
     /**
      * Genera y descarga reporte de gatos en Excel
@@ -50,11 +60,11 @@ public class ReportController {
             byte[] reportData = excelReportService.generateCatsReport();
             
             String filename = "reporte_gatos_" + 
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)) + XLSX_EXTENSION;
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDispositionFormData("attachment", filename);
+            headers.setContentDispositionFormData(ATTACHMENT_DISPOSITION, filename);
             headers.setContentLength(reportData.length);
             
             utils.logAuditAction("DOWNLOAD_CATS_REPORT", "USER", 
@@ -64,7 +74,7 @@ public class ReportController {
             
         } catch (IOException e) {
             logger.error("Error generando reporte de gatos", e);
-            utils.logSecurityEvent("REPORT_GENERATION_ERROR", "SYSTEM", 
+            utils.logSecurityEvent(REPORT_GENERATION_ERROR, SYSTEM_USER, 
                 "Error al generar reporte de gatos: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -81,11 +91,11 @@ public class ReportController {
             byte[] reportData = excelReportService.generateApplicationsReport();
             
             String filename = "reporte_solicitudes_" + 
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)) + XLSX_EXTENSION;
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDispositionFormData("attachment", filename);
+            headers.setContentDispositionFormData(ATTACHMENT_DISPOSITION, filename);
             headers.setContentLength(reportData.length);
             
             utils.logAuditAction("DOWNLOAD_APPLICATIONS_REPORT", "USER", 
@@ -95,7 +105,7 @@ public class ReportController {
             
         } catch (IOException e) {
             logger.error("Error generando reporte de solicitudes", e);
-            utils.logSecurityEvent("REPORT_GENERATION_ERROR", "SYSTEM", 
+            utils.logSecurityEvent(REPORT_GENERATION_ERROR, SYSTEM_USER, 
                 "Error al generar reporte de solicitudes: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -112,11 +122,11 @@ public class ReportController {
             byte[] reportData = excelReportService.generateCompleteReport();
             
             String filename = "reporte_completo_adoptacat_" + 
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)) + XLSX_EXTENSION;
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDispositionFormData("attachment", filename);
+            headers.setContentDispositionFormData(ATTACHMENT_DISPOSITION, filename);
             headers.setContentLength(reportData.length);
             
             utils.logAuditAction("DOWNLOAD_COMPLETE_REPORT", "USER", 
@@ -126,7 +136,7 @@ public class ReportController {
             
         } catch (IOException e) {
             logger.error("Error generando reporte completo", e);
-            utils.logSecurityEvent("REPORT_GENERATION_ERROR", "SYSTEM", 
+            utils.logSecurityEvent(REPORT_GENERATION_ERROR, SYSTEM_USER, 
                 "Error al generar reporte completo: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -147,11 +157,11 @@ public class ReportController {
             byte[] reportData = adoptionReportService.generateAdoptionReport(sampleData);
 
             String filename = "formularios_adopcion_" +
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)) + XLSX_EXTENSION;
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDispositionFormData("attachment", filename);
+            headers.setContentDispositionFormData(ATTACHMENT_DISPOSITION, filename);
             headers.setContentLength(reportData.length);
 
             utils.logAuditAction("DOWNLOAD_ADOPTION_FORMS_REPORT", "USER",
@@ -161,7 +171,7 @@ public class ReportController {
 
         } catch (Exception e) {
             logger.error("Error generando reporte de formularios de adopción", e);
-            utils.logSecurityEvent("ADOPTION_REPORT_GENERATION_ERROR", "SYSTEM",
+            utils.logSecurityEvent("ADOPTION_REPORT_GENERATION_ERROR", SYSTEM_USER,
                 "Error al generar reporte de formularios: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -1,7 +1,37 @@
 # Script para iniciar AdoptaCat FullStack en Windows
 # Asegúrate de ejecutar como administrador si es necesario
 
+param(
+    [Parameter(Mandatory=$false)]
+    [string]$ConfigFile = "config.local.ps1"
+)
+
 Write-Host "🚀 Iniciando AdoptaCat FullStack..." -ForegroundColor Green
+
+# Cargar configuración segura
+if (Test-Path $ConfigFile) {
+    Write-Host "📋 Cargando configuración desde $ConfigFile" -ForegroundColor Cyan
+    . $ConfigFile
+} elseif ($env:MYSQL_PASSWORD) {
+    Write-Host "📋 Usando variables de entorno del sistema" -ForegroundColor Cyan
+} else {
+    Write-Host "❌ ERROR: No se encontró configuración de base de datos" -ForegroundColor Red
+    Write-Host "💡 Soluciones:" -ForegroundColor Yellow
+    Write-Host "   1. Crear archivo '$ConfigFile' basado en 'config.example.ps1'" -ForegroundColor Yellow
+    Write-Host "   2. O establecer la variable de entorno MYSQL_PASSWORD" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Ejemplo rápido:" -ForegroundColor Cyan
+    Write-Host "   Copy-Item 'config.example.ps1' '$ConfigFile'" -ForegroundColor White
+    Write-Host "   # Luego editar $ConfigFile con sus credenciales" -ForegroundColor White
+    exit 1
+}
+
+# Verificar que se hayan establecido las variables necesarias
+if (-not $env:MYSQL_PASSWORD -or $env:MYSQL_PASSWORD -eq "SU_CONTRASEÑA_MYSQL_AQUI" -or $env:MYSQL_PASSWORD -eq "CAMBIAR_ESTA_CONTRASEÑA_INMEDIATAMENTE") {
+    Write-Host "❌ ERROR: Debe establecer una contraseña válida de MySQL" -ForegroundColor Red
+    Write-Host "💡 Edite el archivo '$ConfigFile' con sus credenciales reales" -ForegroundColor Yellow
+    exit 1
+}
 
 # Función para verificar si un puerto está en uso
 function Test-Port {
@@ -56,10 +86,14 @@ try {
     # Verificar MySQL
     Write-Host "🗄️ Verificando conexión a MySQL..." -ForegroundColor Cyan
     try {
-        mysql -u root -p"junior22Ger+" -e "SELECT 1;" 2>$null
+        $mysqlUser = if ($env:MYSQL_USER) { $env:MYSQL_USER } else { "root" }
+        $mysqlHost = if ($env:MYSQL_HOST) { $env:MYSQL_HOST } else { "localhost" }
+        $mysqlDb = if ($env:MYSQL_DATABASE) { $env:MYSQL_DATABASE } else { "adoptacat_db" }
+        
+        mysql -u $mysqlUser -p"$env:MYSQL_PASSWORD" -h $mysqlHost -e "SELECT 1;" 2>$null
         if ($LASTEXITCODE -ne 0) {
             Write-Host "⚠️ Intentando crear la base de datos..." -ForegroundColor Yellow
-            mysql -u root -p"junior22Ger+" -e "CREATE DATABASE IF NOT EXISTS adoptacat_db;"
+            mysql -u $mysqlUser -p"$env:MYSQL_PASSWORD" -h $mysqlHost -e "CREATE DATABASE IF NOT EXISTS $mysqlDb;"
         }
     } catch {
         Write-Host "⚠️ MySQL no está accesible. Verifica que esté corriendo." -ForegroundColor Red

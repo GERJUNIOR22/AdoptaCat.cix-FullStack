@@ -17,7 +17,7 @@ export class NavigationComponent {
 
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   // Computed signal para el usuario
   public user = computed(() => this.authService.user());
@@ -41,15 +41,17 @@ export class NavigationComponent {
 
    /** Abre el modal de login */
    public openLoginModal(): void {
-     this.loginModal.show();
-     if (this.isOpen()) {
-       this.closeMenu();
-     }
+     this.openAuthModal('login');
    }
 
    /** Abre el modal de registro */
    public openRegisterModal(): void {
-     this.loginModal.show(); // Por ahora abre el mismo modal; puedes agregar lógica para mostrar pestaña de registro
+     this.openAuthModal('register');
+   }
+
+   /** Abre el modal de autenticación */
+   private openAuthModal(mode: 'login' | 'register'): void {
+     this.loginModal.show();
      if (this.isOpen()) {
        this.closeMenu();
      }

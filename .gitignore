@@ -7,8 +7,15 @@ frontend/node_modules
 
 # Environment files
 .env
+.env.local
 backend/.env
 frontend/.env
+
+# Configuration files with sensitive data
+config.local.ps1
+*.credentials
+database.conf
+change-mysql-password.sql
 
 # IDE files
 .idea/

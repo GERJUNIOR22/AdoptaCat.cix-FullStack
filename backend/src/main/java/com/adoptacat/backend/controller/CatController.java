@@ -3,7 +3,6 @@ package com.adoptacat.backend.controller;
 import com.adoptacat.backend.model.Cat;
 import com.adoptacat.backend.service.CatService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,11 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 public class CatController {
     
-    @Autowired
-    private CatService catService;
+    private final CatService catService;
+    
+    public CatController(CatService catService) {
+        this.catService = catService;
+    }
     
     // Obtener todos los gatos disponibles
     @GetMapping("/available")
@@ -105,9 +107,12 @@ public class CatController {
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection) {
         
+        CatService.CatSearchFilters filters = new CatService.CatSearchFilters(
+            gender, size, activityLevel, isSpecialNeeds, isVaccinated, isSterilized
+        );
+        
         Page<Cat> cats = catService.searchCatsWithFilters(
-            gender, size, activityLevel, isSpecialNeeds, isVaccinated, isSterilized,
-            page, pageSize, sortBy, sortDirection
+            filters, page, pageSize, sortBy, sortDirection
         );
         return ResponseEntity.ok(cats);
     }

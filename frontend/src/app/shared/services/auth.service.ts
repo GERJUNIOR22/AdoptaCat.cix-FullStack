@@ -1,9 +1,19 @@
 import { Injectable, signal } from '@angular/core';
 
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  isAdmin: boolean;
+  emailVerified?: boolean;
+  profileImageUrl?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // Señal para el usuario
-  user = signal<{ name: string, email: string } | null>(null);
+  user = signal<User | null>(null);
 
   constructor() {
     // Cargar usuario desde localStorage al iniciar
@@ -13,7 +23,7 @@ export class AuthService {
     }
   }
 
-  login(userData: { name: string, email: string }) {
+  login(userData: User) {
     this.user.set(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   }
@@ -25,5 +35,10 @@ export class AuthService {
 
   isLoggedIn() {
     return this.user() !== null;
+  }
+
+  isAdmin() {
+    const currentUser = this.user();
+    return currentUser ? currentUser.isAdmin : false;
   }
 }
