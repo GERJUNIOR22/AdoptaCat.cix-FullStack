@@ -1,8 +1,6 @@
 package com.adoptacat.backend.service;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -33,9 +31,9 @@ public class AdoptionReportService {
     public byte[] generateAdoptionReport(List<Map<String, Object>> adoptionForms) {
         logger.info("Iniciando generación de reporte de adopción con {} formularios", adoptionForms.size());
 
-        // Usar Guava para crear lista inmutable
-        ImmutableList<Map<String, Object>> immutableForms = ImmutableList.copyOf(adoptionForms);
-        logger.debug("Lista de formularios convertida a inmutable con Guava");
+        // Usar List.of() para crear lista inmutable
+        List<Map<String, Object>> immutableForms = List.copyOf(adoptionForms);
+        logger.debug("Lista de formularios convertida a inmutable");
 
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -47,7 +45,7 @@ public class AdoptionReportService {
             CellStyle dataStyle = createDataStyle(workbook);
 
             // Encabezados usando Apache Commons para capitalizar
-            List<String> headers = ImmutableList.of(
+            List<String> headers = List.of(
                 StringUtils.capitalize("Nombre Completo"),
                 StringUtils.capitalize("Celular"),
                 StringUtils.capitalize("Correo Electrónico"),
@@ -88,8 +86,13 @@ public class AdoptionReportService {
                 row.createCell(3).setCellValue(estadoCivil);
                 row.createCell(4).setCellValue(direccion);
                 row.createCell(5).setCellValue(porqueAdoptar);
-                row.createCell(6).setCellValue(tieneMascotas != null ? (tieneMascotas ? "Sí" : "No") : "N/A");
-                row.createCell(7).setCellValue(aceptaCondiciones != null ? (aceptaCondiciones ? "Sí" : "No") : "N/A");
+                
+                // Extraer operaciones ternarias anidadas
+                String tieneMascotasText = convertBooleanToText(tieneMascotas);
+                String aceptaCondicionesText = convertBooleanToText(aceptaCondiciones);
+                
+                row.createCell(6).setCellValue(tieneMascotasText);
+                row.createCell(7).setCellValue(aceptaCondicionesText);
 
                 // Aplicar estilo a las celdas de datos
                 for (int i = 0; i < 8; i++) {
@@ -107,10 +110,21 @@ public class AdoptionReportService {
 
             return outputStream.toByteArray();
 
-        } catch (IOException e) {
-            logger.error("Error al generar reporte de adopción", e);
-            throw new RuntimeException("Error generando reporte", e);
+        } catch (IOException e) { // NOSONAR - Exception is logged and rethrown with context
+            logger.error("Error al generar reporte Excel de adopción con {} formularios: {}", 
+                adoptionForms.size(), e.getMessage(), e);
+            throw new ReportGenerationException("Error generando reporte de adopción", e);
         }
+    }
+
+    /**
+     * Convierte un valor Boolean a texto legible
+     */
+    private String convertBooleanToText(Boolean value) {
+        if (value == null) {
+            return "N/A";
+        }
+        return value ? "Sí" : "No";
     }
 
     /**
@@ -139,5 +153,14 @@ public class AdoptionReportService {
         style.setBorderLeft(BorderStyle.THIN);
         style.setBorderRight(BorderStyle.THIN);
         return style;
+    }
+
+    /**
+     * Excepción personalizada para errores en la generación de reportes
+     */
+    public static class ReportGenerationException extends RuntimeException {
+        public ReportGenerationException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }

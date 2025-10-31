@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,42 @@ export const routes: Routes = [
    {
      path: 'perfil',
      loadComponent: () => import('./features/profile/pages/profile.component').then(m => m.ProfileComponent)
+   },
+   {
+     path: 'admin',
+     canActivate: [AdminGuard],
+     loadComponent: () => import('./features/admin/admin-layout.component').then(m => m.AdminLayoutComponent),
+     children: [
+       {
+         path: '',
+         redirectTo: 'dashboard',
+         pathMatch: 'full'
+       },
+       {
+         path: 'dashboard',
+         loadComponent: () => import('./features/admin/dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
+       },
+       {
+         path: 'cats',
+         loadComponent: () => import('./features/admin/cats/admin-cats.component').then(m => m.AdminCatsComponent)
+       },
+       {
+         path: 'applications',
+         loadComponent: () => import('./features/admin/applications/admin-applications.component').then(m => m.AdminApplicationsComponent)
+       },
+       {
+         path: 'users',
+         loadComponent: () => import('./features/admin/users/admin-users.component').then(m => m.AdminUsersComponent)
+       },
+       {
+         path: 'reports',
+         loadComponent: () => import('./features/admin/reports/admin-reports.component').then(m => m.AdminReportsComponent)
+       },
+       {
+         path: 'settings',
+         loadComponent: () => import('./features/admin/settings/admin-settings.component').then(m => m.AdminSettingsComponent)
+       }
+     ]
    }
 
  ];
