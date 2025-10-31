@@ -30,7 +30,7 @@ export interface AdoptionProfileData {
   // PARTE 2: HOGAR
   hayNinos: boolean;
   edadesNinos?: string;
-  cuantasPersonasCasa: string;
+  cuantasPersonasCasa: number;
   todosAcuerdan: boolean;
   alguienAlergico: boolean;
   permitenArrendadores?: boolean;

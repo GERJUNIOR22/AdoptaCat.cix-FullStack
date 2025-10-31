@@ -46,6 +46,18 @@ public class AdoptionProfileController {
     }
     
     /**
+     * Endpoint de prueba para verificar conectividad
+     */
+    @GetMapping("/test")
+    public ResponseEntity<Map<String, Object>> testConnection() {
+        Map<String, Object> response = new HashMap<>();
+        response.put(STATUS_KEY, SUCCESS_MESSAGE);
+        response.put(MESSAGE_KEY, "Conexión exitosa con el backend");
+        response.put("timestamp", java.time.LocalDateTime.now());
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
      * Crear o actualizar perfil de adopción
      */
     @PostMapping
@@ -54,6 +66,9 @@ public class AdoptionProfileController {
         
         try {
             logger.info("Solicitud para crear/actualizar perfil de adopción para: {}", profileDTO.getCorreoElectronico());
+            logger.info("Datos recibidos - cuantasPersonasCasa: {}, tipo: {}", 
+                profileDTO.getCuantasPersonasCasa(), 
+                profileDTO.getCuantasPersonasCasa() != null ? profileDTO.getCuantasPersonasCasa().getClass().getSimpleName() : "null");
             
             // Convertir DTO a entidad
             AdoptionProfile profile = profileMapper.toEntity(profileDTO);

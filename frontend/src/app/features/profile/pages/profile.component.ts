@@ -54,7 +54,7 @@ export class ProfileComponent implements OnInit {
       // PARTE 2: HOGAR
       hayNinos: [false],
       edadesNinos: [''],
-      cuantasPersonasCasa: ['', [Validators.required]],
+      cuantasPersonasCasa: [null, [Validators.required, Validators.min(1)]],
       todosAcuerdan: [null, [Validators.required]],
       alguienAlergico: [false],
       permitenArrendadores: [null],
@@ -135,7 +135,7 @@ export class ProfileComponent implements OnInit {
         // PARTE 2: HOGAR
         hayNinos: this.adoptionForm.value.hayNinos || false,
         edadesNinos: this.adoptionForm.value.edadesNinos,
-        cuantasPersonasCasa: this.adoptionForm.value.cuantasPersonasCasa,
+        cuantasPersonasCasa: parseInt(this.adoptionForm.value.cuantasPersonasCasa) || 0,
         todosAcuerdan: this.adoptionForm.value.todosAcuerdan,
         alguienAlergico: this.adoptionForm.value.alguienAlergico || false,
         permitenArrendadores: this.adoptionForm.value.permitenArrendadores,
