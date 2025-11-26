@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/* Para el token */
+import com.adoptacat.backend.jwt.JwtUtil;
+
 /**
  * Controlador para autenticación y manejo de sesiones
  */
@@ -22,13 +25,15 @@ public class AuthController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final AdoptaCatUtils utils;
+    private final JwtUtil jwtUtil;
     
     private static final String ERROR_INTERNO_SERVIDOR = "Error interno del servidor";
 
-    public AuthController(UserService userService, PasswordEncoder passwordEncoder, AdoptaCatUtils utils) {
+    public AuthController(UserService userService, PasswordEncoder passwordEncoder, AdoptaCatUtils utils, JwtUtil jwtUtil) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.utils = utils;
+        this.jwtUtil = jwtUtil;
     }
 
     /**
@@ -71,6 +76,9 @@ public class AuthController {
             utils.logAuditAction("USER_LOGIN", user.getEmail(), 
                 "Usuario autenticado exitosamente");
 
+            // Generar token JWT
+            String token = jwtUtil.generateTokenFromUsername(user.getEmail());
+
             // Crear respuesta de login exitoso
             LoginResponse response = new LoginResponse();
             response.setId(user.getId());
@@ -80,6 +88,7 @@ public class AuthController {
             response.setIsAdmin(user.getRole() == User.Role.ADMIN);
             response.setEmailVerified(user.getEmailVerified());
             response.setProfileImageUrl(user.getProfileImageUrl());
+            response.setToken(token);
 
             return ResponseEntity.ok(response);
 
@@ -270,6 +279,7 @@ public class AuthController {
         private Boolean isAdmin;
         private Boolean emailVerified;
         private String profileImageUrl;
+        private String token;
         
         // Getters and Setters
         public Long getId() { return id; }
@@ -292,6 +302,9 @@ public class AuthController {
         
         public String getProfileImageUrl() { return profileImageUrl; }
         public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
+
+        public String getToken() { return token; }
+        public void setToken(String token) { this.token = token; }
     }
 
     public static class RegisterRequest {
