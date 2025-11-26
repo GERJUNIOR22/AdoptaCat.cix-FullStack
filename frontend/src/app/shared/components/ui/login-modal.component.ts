@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-modal',
@@ -160,6 +161,11 @@ export class LoginModalComponent {
     password: ''
   };
 
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
   show() {
     this.isVisible.set(true);
     document.body.style.overflow = 'hidden';
@@ -187,7 +193,6 @@ export class LoginModalComponent {
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 
-
   async loginWithFacebook() {
     this.isLoading.set(true);
     try {
@@ -208,8 +213,8 @@ export class LoginModalComponent {
     }
   }
 
-  // Email/Password Login
-  async loginWithEmail() {
+  // Email/Password Login REAL contra el backend
+  loginWithEmail() {
     if (!this.credentials.email || !this.credentials.password) {
       this.loginError.set('Por favor completa todos los campos');
       return;
@@ -218,36 +223,32 @@ export class LoginModalComponent {
     this.isLoading.set(true);
     this.loginError.set('');
 
-    try {
-      // TODO: Implementar llamada a API de login
-      console.log('Email login:', this.credentials);
-      
-      // Simulación de login - el backend determinará si es admin o usuario normal
-      setTimeout(() => {
+    this.authService.loginWithCredentials(this.credentials).subscribe({
+      next: (res) => {
+        // El AuthService ya guardó user + token en localStorage y signal
         this.isLoading.set(false);
         this.closeModal();
-        
-        // TODO: Aquí el backend responderá con el tipo de usuario
-        // Si es admin, redirigir al panel de admin
-        // Si es usuario normal, mantener en la página actual
-        
-        // Demo: simular que algunos emails son de admin
-        const adminEmails = ['admin@adoptacat.org', 'gerencia@adoptacat.org', 'director@adoptacat.org'];
-        if (adminEmails.includes(this.credentials.email.toLowerCase())) {
-          alert('¡Bienvenido Administrador! Redirigiendo al panel de admin (demo)');
-          // TODO: Redirigir al panel de admin
-        } else {
-          alert('¡Bienvenido! Login exitoso (demo)');
-          // TODO: Mantener en la página actual como usuario normal
-        }
-      }, 2000);
-      
-    } catch (error) {
-      this.isLoading.set(false);
-      this.loginError.set('Error al iniciar sesión. Verifica tus credenciales.');
-      console.error('Error logging in:', error);
-    }
 
-    
+        // Redirigir según rol
+        if (res.isAdmin) {
+          // Ajusta la ruta al panel admin real de tu app
+          this.router.navigate(['/admin']);
+        } else {
+          // Usuario normal: puedes quedarte en la página actual
+          // o ir al home:
+          // this.router.navigate(['/']);
+        }
+      },
+      error: (err) => {
+        console.error('Error logging in:', err);
+        this.isLoading.set(false);
+
+        if (err.status === 401 || err.status === 403) {
+          this.loginError.set('Credenciales inválidas o usuario inactivo.');
+        } else {
+          this.loginError.set('Error al iniciar sesión. Inténtalo de nuevo más tarde.');
+        }
+      }
+    });
   }
 }
