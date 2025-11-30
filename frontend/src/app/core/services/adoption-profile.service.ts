@@ -33,7 +33,7 @@ export interface AdoptionProfileData {
   cuantasPersonasCasa: number;
   todosAcuerdan: boolean;
   alguienAlergico: boolean;
-  permitenArrendadores?: boolean;
+  permitenArrendadores?: string;
   porqueCambiarDomicilio: string;
   rupturaFamilia: string;
 
@@ -94,8 +94,8 @@ export class AdoptionProfileService {
   /**
    * Verificar si existe perfil
    */
-  checkProfileExists(email: string): Observable<ApiResponse<{exists: boolean}>> {
-    return this.http.get<ApiResponse<{exists: boolean}>>(`${this.baseUrl}/exists/${email}`);
+  checkProfileExists(email: string): Observable<ApiResponse<{ exists: boolean }>> {
+    return this.http.get<ApiResponse<{ exists: boolean }>>(`${this.baseUrl}/exists/${email}`);
   }
 
   /**
