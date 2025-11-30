@@ -1,0 +1,32 @@
+# Ignore local spring configs
+backend/src/main/resources/application-*.properties
+
+# node modules and builds
+frontend/node_modules
+**/target
+
+# Environment files
+.env
+.env.local
+backend/.env
+frontend/.env
+
+# Configuration files with sensitive data
+config.local.ps1
+*.credentials
+database.conf
+change-mysql-password.sql
+
+# IDE files
+.idea/
+.vscode/
+
+# Build artifacts
+/target/
+frontend/dist/
+
+# Others
+*.log
+/logs/
+logs/
+coverage/# Ignore local spring configs\nbackend/src/main/resources/application-*.properties\n# node modules and builds\nfrontend/node_modules\n**/target\n

@@ -1,0 +1,51 @@
+<section class="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-background to-muted/30">
+  <div class="container mx-auto px-4 py-24 md:py-32">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8 animate-fade-in-up">
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-balance leading-tight font-sans">
+          Somos la voz
+          <br />
+          de los
+          <br />
+          <span class="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">gatos</span>
+        </h1>
+        <p class="text-lg text-muted-foreground leading-relaxed max-w-md font-reading">
+          Dale a un gato amoroso un hogar para siempre. Explora nuestros gatos adoptables y descubre tu nuevo mejor
+          amigo hoy.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a
+            routerLink="/adopta"
+            class="btn btn-primary rounded-full px-8 hover:scale-105 transition-transform font-medium"
+          >
+            Ver Gatos
+          </a>
+
+          <button
+            routerLink="/nosotros"
+            class="btn btn-outline rounded-full px-8 bg-transparent hover:scale-105 transition-transform font-medium"
+          >
+            Saber Más
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-4 animate-fade-in-up delay-100">
+          <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-muted hover:scale-105 transition-transform duration-300">
+            <img
+              src="assets/gatos/miel.webp"
+              alt="Gato naranja atigrado"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+        <div class="space-y-4 pt-12 animate-fade-in-up delay-200">
+          <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-muted hover:scale-105 transition-transform duration-300">
+            <img src="assets/gatos/gatofondo.webp" alt="Gato gris" class="w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,54 @@
+name: Fullstack CI - Spring Boot + Angular
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1️. Clonar el repo
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2️. Configurar Node.js para Angular
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    # 3️. Instalar dependencias y correr tests de Angular
+    - name: Install Angular dependencies
+      working-directory: ./frontend
+      run: npm install
+
+    - name: Run Angular tests
+      working-directory: ./frontend
+      run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+    - name: Build Angular
+      working-directory: ./frontend
+      run: npm run build --prod
+
+    # 4️. Configurar JDK para Spring Boot
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: temurin
+        cache: maven
+
+    # 5️. Compilar Spring Boot
+    - name: Build Spring Boot
+      working-directory: ./backend
+      run: mvn clean package -B
+
+    # 6️. Correr tests de Spring Boot
+    - name: Run Spring Boot tests
+      working-directory: ./backend
+      run: mvn test
