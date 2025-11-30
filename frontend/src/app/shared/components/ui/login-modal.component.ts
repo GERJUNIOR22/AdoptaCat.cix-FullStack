@@ -164,7 +164,7 @@ export class LoginModalComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   show() {
     this.isVisible.set(true);
@@ -198,7 +198,7 @@ export class LoginModalComponent {
     try {
       // TODO: Implementar Facebook OAuth
       console.log('Login with Facebook');
-      
+
       // Simulación de login exitoso
       setTimeout(() => {
         this.isLoading.set(false);
@@ -206,7 +206,7 @@ export class LoginModalComponent {
         // TODO: Guardar token de usuario y redirigir según el tipo de usuario
         alert('¡Bienvenido! Login con Facebook exitoso (demo)');
       }, 2000);
-      
+
     } catch (error) {
       this.isLoading.set(false);
       console.error('Error logging in with Facebook:', error);
@@ -230,7 +230,7 @@ export class LoginModalComponent {
         this.closeModal();
 
         // Redirigir según rol
-        if (res.isAdmin) {
+        if (res.role === 'ADMIN') {
           // Ajusta la ruta al panel admin real de tu app
           this.router.navigate(['/admin']);
         } else {
