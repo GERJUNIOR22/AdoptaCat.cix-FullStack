@@ -1,5 +1,6 @@
 package com.adoptacat.backend.config;
 
+import com.adoptacat.backend.security.JwtFilter;
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -19,10 +21,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(OAuth2LoginSuccessHandler oauth2LoginSuccessHandler) {
-        this.oauth2LoginSuccessHandler = oauth2LoginSuccessHandler;
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -31,58 +33,26 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
 
                 .requestMatchers(
-                    "/api/auth/**",
-                    "/api/cats/**",
-                    "/api/adoption-applications",
-                    "/api/adoption-applications/number/**",
-                    "/api/adoption-applications/user/**",
-                    "/api/adoption-applications/check/**",
-                    "/actuator/health",
-                    "/actuator/info",
-                    "/h2-console/**",
-                    "/oauth2/**"
+                    "/api/v1/auth/**",
+                    "/api/v1/cats",
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/actuator/health"
                 ).permitAll()
 
-                .requestMatchers(
-                    "/api/adoption-applications/stats",
-                    "/api/adoption-applications/search",
-                    "/api/adoption-applications/*/approve",
-                    "/api/adoption-applications/*/reject",
-                    "/api/adoption-applications/*/under-review",
-                    "/api/reports/**",
-                    "/actuator/**"
-                ).authenticated()
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
                 .anyRequest().authenticated()
             )
 
-            .oauth2Login(oauth2 -> oauth2
-                .successHandler(oauth2LoginSuccessHandler)
-                .failureUrl("/login?error=true")
-            )
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
             .headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions.sameOrigin())
-                .contentTypeOptions(contentTypeOptions -> {})
-                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
-                    .maxAgeInSeconds(31536000)
-                    .includeSubDomains(true)
-                    .preload(true)
-                )
-                .referrerPolicy(referrerPolicy ->
-                    referrerPolicy.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
-                .contentSecurityPolicy(csp -> csp
-                    .policyDirectives("default-src 'self'; " +
-                        "script-src 'self' 'unsafe-inline'; " +
-                        "style-src 'self' 'unsafe-inline'; " +
-                        "img-src 'self' data: https:; " +
-                        "font-src 'self' data:; " +
-                        "connect-src 'self'; " +
-                        "frame-ancestors 'none';"))
             );
 
         return http.build();

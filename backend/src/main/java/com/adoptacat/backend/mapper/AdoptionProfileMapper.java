@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AdoptionProfileMapper {
-    
+
     /**
      * Convierte DTO a entidad
      */
@@ -17,9 +17,9 @@ public class AdoptionProfileMapper {
         if (dto == null) {
             return null;
         }
-        
+
         AdoptionProfile profile = new AdoptionProfile();
-        
+
         // Información del candidato
         profile.setNombreCompleto(dto.getNombreCompleto());
         profile.setCelular(dto.getCelular());
@@ -33,7 +33,7 @@ public class AdoptionProfileMapper {
         profile.setCorreoElectronico(dto.getCorreoElectronico());
         profile.setInstagram(dto.getInstagram());
         profile.setFacebook(dto.getFacebook());
-        
+
         // Experiencia con mascotas
         profile.setPorqueAdoptar(dto.getPorqueAdoptar());
         profile.setTieneMascotasActuales(dto.getTieneMascotasActuales());
@@ -43,7 +43,7 @@ public class AdoptionProfileMapper {
         profile.setTuvoMascotasAntes(dto.getTuvoMascotasAntes());
         profile.setCualesMascotasAntes(dto.getCualesMascotasAntes());
         profile.setQuePasoConEllas(dto.getQuePasoConEllas());
-        
+
         // Hogar
         profile.setHayNinos(dto.getHayNinos());
         profile.setEdadesNinos(dto.getEdadesNinos());
@@ -53,20 +53,20 @@ public class AdoptionProfileMapper {
         profile.setPermitenArrendadores(dto.getPermitenArrendadores());
         profile.setPorqueCambiarDomicilio(dto.getPorqueCambiarDomicilio());
         profile.setRupturaFamilia(dto.getRupturaFamilia());
-        
+
         // Recreación y proyección
         profile.setEspacioSuficiente(dto.getEspacioSuficiente());
         profile.setAreasIngresoGato(dto.getAreasIngresoGato());
         profile.setDondeDuermeGato(dto.getDondeDuermeGato());
         profile.setEspaciosEscape(dto.getEspaciosEscape());
         profile.setComportamientoGato(dto.getComportamientoGato());
-        
+
         // Cuidados y gastos
         profile.setResponsableGastos(dto.getResponsableGastos());
         profile.setRecursosVeterinarios(dto.getRecursosVeterinarios());
         profile.setCompromisoEsterilizar(dto.getCompromisoEsterilizar());
         profile.setAcuerdoVisitaDomiciliaria(dto.getAcuerdoVisitaDomiciliaria());
-        
+
         // Mapear cuidados si existen
         if (dto.getCuidados() != null) {
             AdoptionProfileDTO.CuidadosDTO cuidados = dto.getCuidados();
@@ -79,13 +79,13 @@ public class AdoptionProfileMapper {
             profile.setLimpiezaArenero(cuidados.getLimpiezaArenero());
             profile.setAlimentacionCroquetas(cuidados.getAlimentacionCroquetas());
         }
-        
+
         // Aceptación
         profile.setAceptoCondiciones(dto.getAceptoCondiciones());
-        
+
         return profile;
     }
-    
+
     /**
      * Convierte entidad a DTO
      */
@@ -93,9 +93,9 @@ public class AdoptionProfileMapper {
         if (profile == null) {
             return null;
         }
-        
+
         AdoptionProfileDTO dto = new AdoptionProfileDTO();
-        
+
         // Información del candidato
         dto.setNombreCompleto(profile.getNombreCompleto());
         dto.setCelular(profile.getCelular());
@@ -109,7 +109,7 @@ public class AdoptionProfileMapper {
         dto.setCorreoElectronico(profile.getCorreoElectronico());
         dto.setInstagram(profile.getInstagram());
         dto.setFacebook(profile.getFacebook());
-        
+
         // Experiencia con mascotas
         dto.setPorqueAdoptar(profile.getPorqueAdoptar());
         dto.setTieneMascotasActuales(profile.getTieneMascotasActuales());
@@ -119,7 +119,7 @@ public class AdoptionProfileMapper {
         dto.setTuvoMascotasAntes(profile.getTuvoMascotasAntes());
         dto.setCualesMascotasAntes(profile.getCualesMascotasAntes());
         dto.setQuePasoConEllas(profile.getQuePasoConEllas());
-        
+
         // Hogar
         dto.setHayNinos(profile.getHayNinos());
         dto.setEdadesNinos(profile.getEdadesNinos());
@@ -129,20 +129,20 @@ public class AdoptionProfileMapper {
         dto.setPermitenArrendadores(profile.getPermitenArrendadores());
         dto.setPorqueCambiarDomicilio(profile.getPorqueCambiarDomicilio());
         dto.setRupturaFamilia(profile.getRupturaFamilia());
-        
+
         // Recreación y proyección
         dto.setEspacioSuficiente(profile.getEspacioSuficiente());
         dto.setAreasIngresoGato(profile.getAreasIngresoGato());
         dto.setDondeDuermeGato(profile.getDondeDuermeGato());
         dto.setEspaciosEscape(profile.getEspaciosEscape());
         dto.setComportamientoGato(profile.getComportamientoGato());
-        
+
         // Cuidados y gastos
         dto.setResponsableGastos(profile.getResponsableGastos());
         dto.setRecursosVeterinarios(profile.getRecursosVeterinarios());
         dto.setCompromisoEsterilizar(profile.getCompromisoEsterilizar());
         dto.setAcuerdoVisitaDomiciliaria(profile.getAcuerdoVisitaDomiciliaria());
-        
+
         // Mapear cuidados
         AdoptionProfileDTO.CuidadosDTO cuidados = new AdoptionProfileDTO.CuidadosDTO();
         cuidados.setVisitasVeterinario(profile.getVisitasVeterinario());
@@ -154,10 +154,10 @@ public class AdoptionProfileMapper {
         cuidados.setLimpiezaArenero(profile.getLimpiezaArenero());
         cuidados.setAlimentacionCroquetas(profile.getAlimentacionCroquetas());
         dto.setCuidados(cuidados);
-        
+
         // Aceptación
         dto.setAceptoCondiciones(profile.getAceptoCondiciones());
-        
+
         return dto;
     }
 }

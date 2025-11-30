@@ -1,3 +1,4 @@
+
 package com.adoptacat.backend.service;
 
 import com.adoptacat.backend.model.User;
@@ -42,7 +43,7 @@ public class UserService {
     public User createUser(User user) {
         try {
             // Validar datos
-            if (user.getEmail() == null || user.getPassword() == null || user.getFullName() == null) {
+            if (user.getEmail() == null || user.getPasswordHash() == null || user.getFullName() == null) {
                 throw new IllegalArgumentException("Campos requeridos faltantes");
             }
 
@@ -63,15 +64,15 @@ public class UserService {
             }
 
             User savedUser = userRepository.save(user);
-            
-            utils.logAuditAction("USER_CREATED", savedUser.getEmail(), 
-                "Usuario creado con rol: " + savedUser.getRole());
-            
+
+            utils.logAuditAction("USER_CREATED", savedUser.getEmail(),
+                    "Usuario creado con rol: " + savedUser.getRole());
+
             return savedUser;
 
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al crear usuario con email {}: {}", 
-                user != null ? user.getEmail() : "null", e.getMessage(), e);
+            logger.error("Error al crear usuario con email {}: {}",
+                    user != null ? user.getEmail() : "null", e.getMessage(), e);
             throw new UserCreationException("Error al crear usuario", e);
         }
     }
@@ -105,16 +106,16 @@ public class UserService {
      */
     public Page<User> getAllUsers(int page, int size, String sortBy, String sortDirection) {
         try {
-            Sort sort = sortDirection.equalsIgnoreCase("desc") 
-                ? Sort.by(sortBy).descending() 
-                : Sort.by(sortBy).ascending();
-            
+            Sort sort = sortDirection.equalsIgnoreCase("desc")
+                    ? Sort.by(sortBy).descending()
+                    : Sort.by(sortBy).ascending();
+
             Pageable pageable = PageRequest.of(page, size, sort);
             return userRepository.findAll(pageable);
 
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al obtener usuarios con paginación [page: {}, size: {}]: {}", 
-                page, size, e.getMessage(), e);
+            logger.error("Error al obtener usuarios con paginación [page: {}, size: {}]: {}",
+                    page, size, e.getMessage(), e);
             throw new UserSearchException("Error al obtener usuarios", e);
         }
     }
@@ -130,7 +131,7 @@ public class UserService {
             }
 
             User existingUser = userOpt.get();
-            
+
             // Actualizar campos (no actualizar password aquí)
             if (userDetails.getFullName() != null) {
                 existingUser.setFullName(userDetails.getFullName());
@@ -152,15 +153,15 @@ public class UserService {
             }
 
             User updatedUser = userRepository.save(existingUser);
-            
-            utils.logAuditAction("USER_UPDATED", updatedUser.getEmail(), 
-                "Usuario actualizado por administrador");
-            
+
+            utils.logAuditAction("USER_UPDATED", updatedUser.getEmail(),
+                    "Usuario actualizado por administrador");
+
             return updatedUser;
 
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al actualizar usuario con ID {}: {}", 
-                id, e.getMessage(), e);
+            logger.error("Error al actualizar usuario con ID {}: {}",
+                    id, e.getMessage(), e);
             throw new UserUpdateException("Error al actualizar usuario", e);
         }
     }
@@ -180,15 +181,15 @@ public class UserService {
             user.setRole(newRole);
 
             User updatedUser = userRepository.save(user);
-            
-            utils.logAuditAction("USER_ROLE_CHANGED", updatedUser.getEmail(), 
-                String.format("Rol cambiado de %s a %s", oldRole, newRole));
-            
+
+            utils.logAuditAction("USER_ROLE_CHANGED", updatedUser.getEmail(),
+                    String.format("Rol cambiado de %s a %s", oldRole, newRole));
+
             return updatedUser;
 
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al cambiar rol de usuario con ID {} a rol {}: {}", 
-                id, newRole, e.getMessage(), e);
+            logger.error("Error al cambiar rol de usuario con ID {} a rol {}: {}",
+                    id, newRole, e.getMessage(), e);
             throw new UserUpdateException("Error al cambiar rol de usuario", e);
         }
     }
@@ -207,16 +208,16 @@ public class UserService {
             user.setIsActive(!user.getIsActive());
 
             User updatedUser = userRepository.save(user);
-            
+
             String status = Boolean.TRUE.equals(updatedUser.getIsActive()) ? "activado" : "desactivado";
-            utils.logAuditAction("USER_STATUS_CHANGED", updatedUser.getEmail(), 
-                "Usuario " + status);
-            
+            utils.logAuditAction("USER_STATUS_CHANGED", updatedUser.getEmail(),
+                    "Usuario " + status);
+
             return updatedUser;
 
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al cambiar estado de usuario con ID {}: {}", 
-                id, e.getMessage(), e);
+            logger.error("Error al cambiar estado de usuario con ID {}: {}",
+                    id, e.getMessage(), e);
             throw new UserUpdateException("Error al cambiar estado de usuario", e);
         }
     }
@@ -232,7 +233,7 @@ public class UserService {
             }
 
             User user = userOpt.get();
-            
+
             // Verificar que no es el último administrador
             if (user.getRole() == User.Role.ADMIN) {
                 long adminCount = userRepository.countByRoleAndIsActive(User.Role.ADMIN, true);
@@ -242,13 +243,13 @@ public class UserService {
             }
 
             userRepository.deleteById(id);
-            
-            utils.logAuditAction("USER_DELETED", user.getEmail(), 
-                "Usuario eliminado permanentemente");
+
+            utils.logAuditAction("USER_DELETED", user.getEmail(),
+                    "Usuario eliminado permanentemente");
 
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al eliminar usuario con ID {}: {}", 
-                id, e.getMessage(), e);
+            logger.error("Error al eliminar usuario con ID {}: {}",
+                    id, e.getMessage(), e);
             throw new UserUpdateException("Error al eliminar usuario", e);
         }
     }
@@ -301,8 +302,8 @@ public class UserService {
             Pageable pageable = PageRequest.of(0, limit, Sort.by("createdAt").descending());
             return userRepository.findAll(pageable).getContent();
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al obtener usuarios recientes [limit: {}]: {}", 
-                limit, e.getMessage(), e);
+            logger.error("Error al obtener usuarios recientes [limit: {}]: {}",
+                    limit, e.getMessage(), e);
             throw new UserSearchException("Error al obtener usuarios recientes", e);
         }
     }
@@ -318,8 +319,8 @@ public class UserService {
         try {
             return userRepository.findByFullNameContainingIgnoreCase(name);
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al buscar usuarios por nombre '{}': {}", 
-                name, e.getMessage(), e);
+            logger.error("Error al buscar usuarios por nombre '{}': {}",
+                    name, e.getMessage(), e);
             throw new UserSearchException("Error al buscar usuarios", e);
         }
     }
@@ -331,8 +332,8 @@ public class UserService {
         try {
             return userRepository.findByRole(role);
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al obtener usuarios por rol {}: {}", 
-                role, e.getMessage(), e);
+            logger.error("Error al obtener usuarios por rol {}: {}",
+                    role, e.getMessage(), e);
             throw new UserSearchException("Error al obtener usuarios por rol", e);
         }
     }
@@ -359,9 +360,9 @@ public class UserService {
     public boolean isUserAdmin(String email) {
         try {
             Optional<User> userOpt = findByEmail(email);
-            return userOpt.isPresent() && 
-                   userOpt.get().getRole() == User.Role.ADMIN && 
-                   userOpt.get().getIsActive();
+            return userOpt.isPresent() &&
+                    userOpt.get().getRole() == User.Role.ADMIN &&
+                    userOpt.get().getIsActive();
         } catch (Exception e) {
             logger.error("Error al verificar rol de administrador: {}", e.getMessage());
             return false;

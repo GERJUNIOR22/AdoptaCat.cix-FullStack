@@ -1,3 +1,4 @@
+
 package com.adoptacat.backend.service;
 
 import com.adoptacat.backend.model.Cat;
@@ -19,107 +20,106 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CatService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(CatService.class);
-    
+
     private final CatRepository catRepository;
     private final AdoptaCatUtils utils;
-    
+
     public CatService(CatRepository catRepository, AdoptaCatUtils utils) {
         this.catRepository = catRepository;
         this.utils = utils;
     }
-    
+
     // Obtener todos los gatos disponibles
     public List<Cat> getAllAvailableCats() {
         return catRepository.findByAdoptionStatus(Cat.AdoptionStatus.AVAILABLE);
     }
-    
+
     // Obtener gatos disponibles con paginación
     public Page<Cat> getAvailableCats(int page, int size, String sortBy, String sortDirection) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         return catRepository.findByAdoptionStatus(Cat.AdoptionStatus.AVAILABLE, pageable);
     }
-    
+
     // Obtener gato por ID
     public Optional<Cat> getCatById(String id) {
         return catRepository.findById(id);
     }
-    
+
     // Obtener gato disponible por ID
     public Optional<Cat> getAvailableCatById(String id) {
         return catRepository.findByIdAndAdoptionStatus(id, Cat.AdoptionStatus.AVAILABLE);
     }
-    
+
     // Obtener gatos destacados
     public List<Cat> getFeaturedCats() {
         return catRepository.findByFeaturedTrueAndAdoptionStatus(Cat.AdoptionStatus.AVAILABLE);
     }
-    
+
     // Obtener gatos recién llegados (últimos 30 días)
     public List<Cat> getRecentArrivals() {
         LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
         return catRepository.findRecentArrivals(thirtyDaysAgo, Cat.AdoptionStatus.AVAILABLE);
     }
-    
+
     // Buscar gatos con filtros
-    public Page<Cat> searchCatsWithFilters(CatSearchFilters filters, 
+    public Page<Cat> searchCatsWithFilters(CatSearchFilters filters,
             int page, int size, String sortBy, String sortDirection) {
-        
+
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        
+
         return catRepository.findCatsWithFilters(
-            filters.getGender(), filters.getSize(), filters.getActivityLevel(),
-            filters.getIsSpecialNeeds(), filters.getIsVaccinated(), filters.getIsSterilized(),
-            Cat.AdoptionStatus.AVAILABLE, pageable
-        );
+                filters.getGender(), filters.getSize(), filters.getActivityLevel(),
+                filters.getIsSpecialNeeds(), filters.getIsVaccinated(), filters.getIsSterilized(),
+                Cat.AdoptionStatus.AVAILABLE, pageable);
     }
-    
+
     // Buscar gatos por nombre
     public List<Cat> searchCatsByName(String name) {
         return catRepository.findByNameContainingIgnoreCaseAndAdoptionStatus(name, Cat.AdoptionStatus.AVAILABLE);
     }
-    
+
     // Buscar gatos por raza
     public List<Cat> searchCatsByBreed(String breed) {
         return catRepository.findByBreedContainingIgnoreCaseAndAdoptionStatus(breed, Cat.AdoptionStatus.AVAILABLE);
     }
-    
+
     // Crear nuevo gato
     public Cat createCat(Cat cat) {
         logger.info("Creando nuevo gato: {}", cat.getName());
-        
+
         // Validar y sanitizar datos
         if (cat.getName() != null) {
             cat.setName(utils.validateAndSanitizeName(cat.getName()));
         }
-        
+
         if (cat.getDescription() != null) {
             cat.setDescription(utils.validateAndSanitizeText(cat.getDescription()));
         }
-        
+
         if (cat.getStory() != null) {
             cat.setStory(utils.validateAndSanitizeText(cat.getStory()));
         }
-        
+
         if (cat.getId() == null || cat.getId().trim().isEmpty()) {
             cat.setId(utils.generateCatId());
         }
-        
+
         // Validar que el ID sea alfanumérico
         if (!utils.isValidAlphanumericId(cat.getId())) {
             logger.warn("Intento de crear gato con ID inválido: {}", cat.getId());
             throw new IllegalArgumentException("El ID del gato debe ser alfanumérico");
         }
-        
+
         // Validar que el ID no exista
         if (catRepository.existsById(cat.getId())) {
             logger.warn("Intento de crear gato con ID duplicado: {}", cat.getId());
             throw new IllegalArgumentException("Ya existe un gato con el ID: " + cat.getId());
         }
-        
+
         // Establecer valores por defecto
         if (cat.getAdoptionStatus() == null) {
             cat.setAdoptionStatus(Cat.AdoptionStatus.AVAILABLE);
@@ -136,91 +136,109 @@ public class CatService {
         if (cat.getIsSpecialNeeds() == null) {
             cat.setIsSpecialNeeds(false);
         }
-        
+
         Cat savedCat = catRepository.save(cat);
-        
-        utils.logAuditAction("CREATE_CAT", "ADMIN", 
-            "Gato creado: " + savedCat.getId() + " - " + savedCat.getName());
-        
+
+        utils.logAuditAction("CREATE_CAT", "ADMIN",
+                "Gato creado: " + savedCat.getId() + " - " + savedCat.getName());
+
         logger.info("Gato creado exitosamente: {} - {}", savedCat.getId(), savedCat.getName());
-        
+
         return savedCat;
     }
-    
+
     // Actualizar gato
     public Cat updateCat(String id, Cat catDetails) {
         Optional<Cat> optionalCat = catRepository.findById(id);
-        
+
         if (optionalCat.isEmpty()) {
             throw new IllegalArgumentException("No se encontró el gato con ID: " + id);
         }
-        
+
         Cat existingCat = optionalCat.get();
-        
+
         updateBasicInfo(existingCat, catDetails);
         updateHealthInfo(existingCat, catDetails);
         updateStatusInfo(existingCat, catDetails);
-        
+
         return catRepository.save(existingCat);
     }
-    
+
     private void updateBasicInfo(Cat existingCat, Cat catDetails) {
-        if (catDetails.getName() != null) existingCat.setName(catDetails.getName());
-        if (catDetails.getBreed() != null) existingCat.setBreed(catDetails.getBreed());
-        if (catDetails.getAge() != null) existingCat.setAge(catDetails.getAge());
-        if (catDetails.getGender() != null) existingCat.setGender(catDetails.getGender());
-        if (catDetails.getBirthDate() != null) existingCat.setBirthDate(catDetails.getBirthDate());
-        if (catDetails.getSize() != null) existingCat.setSize(catDetails.getSize());
-        if (catDetails.getMainImageUrl() != null) existingCat.setMainImageUrl(catDetails.getMainImageUrl());
-        if (catDetails.getDescription() != null) existingCat.setDescription(catDetails.getDescription());
-        if (catDetails.getStory() != null) existingCat.setStory(catDetails.getStory());
-        if (catDetails.getPersonality() != null) existingCat.setPersonality(catDetails.getPersonality());
+        if (catDetails.getName() != null)
+            existingCat.setName(catDetails.getName());
+        if (catDetails.getBreed() != null)
+            existingCat.setBreed(catDetails.getBreed());
+        if (catDetails.getAge() != null)
+            existingCat.setAge(catDetails.getAge());
+        if (catDetails.getGender() != null)
+            existingCat.setGender(catDetails.getGender());
+        if (catDetails.getBirthDate() != null)
+            existingCat.setBirthDate(catDetails.getBirthDate());
+        if (catDetails.getSize() != null)
+            existingCat.setSize(catDetails.getSize());
+        if (catDetails.getMainImageUrl() != null)
+            existingCat.setMainImageUrl(catDetails.getMainImageUrl());
+        if (catDetails.getDescription() != null)
+            existingCat.setDescription(catDetails.getDescription());
+        if (catDetails.getStory() != null)
+            existingCat.setStory(catDetails.getStory());
+        if (catDetails.getPersonality() != null)
+            existingCat.setPersonality(catDetails.getPersonality());
     }
-    
+
     private void updateHealthInfo(Cat existingCat, Cat catDetails) {
-        if (catDetails.getHealthStatus() != null) existingCat.setHealthStatus(catDetails.getHealthStatus());
-        if (catDetails.getIsVaccinated() != null) existingCat.setIsVaccinated(catDetails.getIsVaccinated());
-        if (catDetails.getIsSterilized() != null) existingCat.setIsSterilized(catDetails.getIsSterilized());
-        if (catDetails.getIsSpecialNeeds() != null) existingCat.setIsSpecialNeeds(catDetails.getIsSpecialNeeds());
-        if (catDetails.getActivityLevel() != null) existingCat.setActivityLevel(catDetails.getActivityLevel());
+        if (catDetails.getHealthStatus() != null)
+            existingCat.setHealthStatus(catDetails.getHealthStatus());
+        if (catDetails.getIsVaccinated() != null)
+            existingCat.setIsVaccinated(catDetails.getIsVaccinated());
+        if (catDetails.getIsSterilized() != null)
+            existingCat.setIsSterilized(catDetails.getIsSterilized());
+        if (catDetails.getIsSpecialNeeds() != null)
+            existingCat.setIsSpecialNeeds(catDetails.getIsSpecialNeeds());
+        if (catDetails.getActivityLevel() != null)
+            existingCat.setActivityLevel(catDetails.getActivityLevel());
     }
-    
+
     private void updateStatusInfo(Cat existingCat, Cat catDetails) {
-        if (catDetails.getAdoptionStatus() != null) existingCat.setAdoptionStatus(catDetails.getAdoptionStatus());
-        if (catDetails.getArrivedAt() != null) existingCat.setArrivedAt(catDetails.getArrivedAt());
-        if (catDetails.getFeatured() != null) existingCat.setFeatured(catDetails.getFeatured());
+        if (catDetails.getAdoptionStatus() != null)
+            existingCat.setAdoptionStatus(catDetails.getAdoptionStatus());
+        if (catDetails.getArrivedAt() != null)
+            existingCat.setArrivedAt(catDetails.getArrivedAt());
+        if (catDetails.getFeatured() != null)
+            existingCat.setFeatured(catDetails.getFeatured());
     }
-    
+
     // Marcar gato como adoptado
     public Cat markAsAdopted(String id) {
         Optional<Cat> optionalCat = catRepository.findById(id);
-        
+
         if (optionalCat.isEmpty()) {
             throw new IllegalArgumentException("No se encontró el gato con ID: " + id);
         }
-        
+
         Cat cat = optionalCat.get();
         cat.setAdoptionStatus(Cat.AdoptionStatus.ADOPTED);
         cat.setAdoptedAt(LocalDate.now());
-        
+
         return catRepository.save(cat);
     }
-    
+
     // Marcar gato como disponible
     public Cat markAsAvailable(String id) {
         Optional<Cat> optionalCat = catRepository.findById(id);
-        
+
         if (optionalCat.isEmpty()) {
             throw new IllegalArgumentException("No se encontró el gato con ID: " + id);
         }
-        
+
         Cat cat = optionalCat.get();
         cat.setAdoptionStatus(Cat.AdoptionStatus.AVAILABLE);
         cat.setAdoptedAt(null);
-        
+
         return catRepository.save(cat);
     }
-    
+
     // Eliminar gato
     public void deleteCat(String id) {
         if (!catRepository.existsById(id)) {
@@ -228,20 +246,20 @@ public class CatService {
         }
         catRepository.deleteById(id);
     }
-    
+
     // Estadísticas
     public long countAvailableCats() {
         return catRepository.countByAdoptionStatus(Cat.AdoptionStatus.AVAILABLE);
     }
-    
+
     public long countAdoptedCats() {
         return catRepository.countByAdoptionStatus(Cat.AdoptionStatus.ADOPTED);
     }
-    
+
     public long countPendingCats() {
         return catRepository.countByAdoptionStatus(Cat.AdoptionStatus.PENDING);
     }
-    
+
     // Verificar si existe un gato
     public boolean existsById(String id) {
         return catRepository.existsById(id);
@@ -254,10 +272,11 @@ public class CatService {
     /**
      * Obtener todos los gatos para administración (incluye no disponibles)
      */
-    public Page<Cat> getAllCatsForAdmin(int page, int size, String sortBy, String sortDirection, Cat.AdoptionStatus status) {
+    public Page<Cat> getAllCatsForAdmin(int page, int size, String sortBy, String sortDirection,
+            Cat.AdoptionStatus status) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        
+
         if (status != null) {
             return catRepository.findByAdoptionStatus(status, pageable);
         } else {
@@ -298,13 +317,13 @@ public class CatService {
                     catRepository.save(cat);
                 }
             }
-            
-            utils.logAuditAction("BATCH_CAT_STATUS_UPDATE", "ADMIN", 
-                String.format("Actualizados %d gatos a estado %s", catIds.size(), status));
-                
+
+            utils.logAuditAction("BATCH_CAT_STATUS_UPDATE", "ADMIN",
+                    String.format("Actualizados %d gatos a estado %s", catIds.size(), status));
+
         } catch (Exception e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error en actualización masiva de {} gatos a estado {}: {}", 
-                catIds.size(), status, e.getMessage(), e);
+            logger.error("Error en actualización masiva de {} gatos a estado {}: {}",
+                    catIds.size(), status, e.getMessage(), e);
             throw new CatServiceException("Error en actualización masiva", e);
         }
     }
@@ -339,11 +358,28 @@ public class CatService {
             this.isSterilized = isSterilized;
         }
 
-        public Cat.Gender getGender() { return gender; }
-        public Cat.Size getSize() { return size; }
-        public Cat.ActivityLevel getActivityLevel() { return activityLevel; }
-        public Boolean getIsSpecialNeeds() { return isSpecialNeeds; }
-        public Boolean getIsVaccinated() { return isVaccinated; }
-        public Boolean getIsSterilized() { return isSterilized; }
+        public Cat.Gender getGender() {
+            return gender;
+        }
+
+        public Cat.Size getSize() {
+            return size;
+        }
+
+        public Cat.ActivityLevel getActivityLevel() {
+            return activityLevel;
+        }
+
+        public Boolean getIsSpecialNeeds() {
+            return isSpecialNeeds;
+        }
+
+        public Boolean getIsVaccinated() {
+            return isVaccinated;
+        }
+
+        public Boolean getIsSterilized() {
+            return isSterilized;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.adoptacat.backend.jwt;
+package com.adoptacat.backend.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtUtil {
+public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -54,10 +54,10 @@ public class JwtUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        // Para meter roles, id usuario, entre otros.
         return createToken(claims, userDetails.getUsername());
     }
-    public String generateTokenFromUsername(String username) {
+
+    public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
@@ -80,5 +80,3 @@ public class JwtUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
-
-// Texto para realizar un push en la rama develop (IGNORAR)

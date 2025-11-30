@@ -1,3 +1,4 @@
+
 package com.adoptacat.backend.service;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,7 @@ public class AdoptionReportService {
         logger.debug("Lista de formularios convertida a inmutable");
 
         try (Workbook workbook = new XSSFWorkbook();
-             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
             Sheet sheet = workbook.createSheet("Formularios de Adopción");
 
@@ -46,15 +47,14 @@ public class AdoptionReportService {
 
             // Encabezados usando Apache Commons para capitalizar
             List<String> headers = List.of(
-                StringUtils.capitalize("Nombre Completo"),
-                StringUtils.capitalize("Celular"),
-                StringUtils.capitalize("Correo Electrónico"),
-                StringUtils.capitalize("Estado Civil"),
-                StringUtils.capitalize("Dirección"),
-                StringUtils.capitalize("¿Por qué adoptar?"),
-                StringUtils.capitalize("¿Tiene mascotas actuales?"),
-                StringUtils.capitalize("¿Acepta condiciones?")
-            );
+                    StringUtils.capitalize("Nombre Completo"),
+                    StringUtils.capitalize("Celular"),
+                    StringUtils.capitalize("Correo Electrónico"),
+                    StringUtils.capitalize("Estado Civil"),
+                    StringUtils.capitalize("Dirección"),
+                    StringUtils.capitalize("¿Por qué adoptar?"),
+                    StringUtils.capitalize("¿Tiene mascotas actuales?"),
+                    StringUtils.capitalize("¿Acepta condiciones?"));
 
             // Crear fila de encabezados
             Row headerRow = sheet.createRow(0);
@@ -86,11 +86,11 @@ public class AdoptionReportService {
                 row.createCell(3).setCellValue(estadoCivil);
                 row.createCell(4).setCellValue(direccion);
                 row.createCell(5).setCellValue(porqueAdoptar);
-                
+
                 // Extraer operaciones ternarias anidadas
                 String tieneMascotasText = convertBooleanToText(tieneMascotas);
                 String aceptaCondicionesText = convertBooleanToText(aceptaCondiciones);
-                
+
                 row.createCell(6).setCellValue(tieneMascotasText);
                 row.createCell(7).setCellValue(aceptaCondicionesText);
 
@@ -111,8 +111,8 @@ public class AdoptionReportService {
             return outputStream.toByteArray();
 
         } catch (IOException e) { // NOSONAR - Exception is logged and rethrown with context
-            logger.error("Error al generar reporte Excel de adopción con {} formularios: {}", 
-                adoptionForms.size(), e.getMessage(), e);
+            logger.error("Error al generar reporte Excel de adopción con {} formularios: {}",
+                    adoptionForms.size(), e.getMessage(), e);
             throw new ReportGenerationException("Error generando reporte de adopción", e);
         }
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Repositorio para la entidad User
@@ -16,164 +17,167 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // ============================================
-    // BÚSQUEDAS BÁSICAS
-    // ============================================
+       // ============================================
+       // BÚSQUEDAS BÁSICAS
+       // ============================================
 
-    /**
-     * Buscar usuario por email
-     */
-    Optional<User> findByEmail(String email);
+       /**
+        * Buscar usuario por email
+        */
+       Optional<User> findByEmail(String email);
 
-    /**
-     * Verificar si existe un usuario con el email
-     */
-    boolean existsByEmail(String email);
+       /**
+        * Verificar si existe un usuario con el email
+        */
+       boolean existsByEmail(String email);
 
-    /**
-     * Buscar usuarios por nombre completo (contiene texto)
-     */
-    List<User> findByFullNameContainingIgnoreCase(String fullName);
+       /**
+        * Buscar usuarios por nombre completo (contiene texto)
+        */
+       List<User> findByFullNameContainingIgnoreCase(String fullName);
 
-    /**
-     * Buscar usuarios por rol
-     */
-    List<User> findByRole(User.Role role);
+       /**
+        * Buscar usuarios por rol
+        */
+       List<User> findByRole(User.Role role);
 
-    /**
-     * Buscar usuarios activos
-     */
-    List<User> findByIsActive(boolean isActive);
+       /**
+        * Buscar usuarios con perfil completo
+        */
+       List<User> findByPerfilCompleto(boolean perfilCompleto);
 
-    /**
-     * Buscar usuarios por rol y estado activo
-     */
-    List<User> findByRoleAndIsActive(User.Role role, boolean isActive);
+       /**
+        * Buscar usuarios activos
+        */
+       List<User> findByIsActive(boolean isActive);
 
-    // ============================================
-    // CONTADORES
-    // ============================================
+       /**
+        * Contar usuarios por estado activo
+        */
+       long countByIsActive(boolean isActive);
 
-    /**
-     * Contar usuarios por estado activo
-     */
-    long countByIsActive(boolean isActive);
+       /**
+        * Contar usuarios con email verificado
+        */
+       long countByEmailVerified(boolean emailVerified);
 
-    /**
-     * Contar usuarios por rol
-     */
-    long countByRole(User.Role role);
+       // ============================================
+       // CONTADORES
+       // ============================================
 
-    /**
-     * Contar usuarios por rol y estado activo
-     */
-    long countByRoleAndIsActive(User.Role role, boolean isActive);
+       /**
+        * Contar usuarios por rol
+        */
+       long countByRole(User.Role role);
 
-    /**
-     * Contar usuarios con email verificado
-     */
-    long countByEmailVerified(boolean emailVerified);
+       /**
+        * Contar usuarios por rol y estado activo
+        */
+       long countByRoleAndIsActive(User.Role role, boolean isActive);
 
-    // ============================================
-    // BÚSQUEDAS POR FECHA
-    // ============================================
+       // ============================================
+       // BÚSQUEDAS POR FECHA
+       // ============================================
 
-    /**
-     * Buscar usuarios creados después de una fecha
-     */
-    List<User> findByCreatedAtAfter(LocalDateTime date);
+       /**
+        * Buscar usuarios creados después de una fecha
+        */
+       List<User> findByCreatedAtAfter(LocalDateTime date);
 
-    /**
-     * Buscar usuarios creados entre dos fechas
-     */
-    List<User> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+       /**
+        * Buscar usuarios creados entre dos fechas
+        */
+       List<User> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    /**
-     * Buscar usuarios actualizados recientemente
-     */
-    List<User> findByUpdatedAtAfter(LocalDateTime date);
+       // ============================================
 
-    // ============================================
-    // BÚSQUEDAS AVANZADAS CON QUERY
-    // ============================================
+       /**
+        * Buscar usuarios actualizados recientemente
+        */
+       List<User> findByUpdatedAtAfter(LocalDateTime date);
 
-    /**
-     * Buscar usuarios por múltiples criterios
-     */
-    @Query("SELECT u FROM User u WHERE " +
-           "(:role IS NULL OR u.role = :role) AND " +
-           "(:isActive IS NULL OR u.isActive = :isActive) AND " +
-           "(:emailVerified IS NULL OR u.emailVerified = :emailVerified) AND " +
-           "(:searchTerm IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           " LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
-    List<User> findUsersByCriteria(@Param("role") User.Role role,
-                                  @Param("isActive") Boolean isActive,
-                                  @Param("emailVerified") Boolean emailVerified,
-                                  @Param("searchTerm") String searchTerm);
+       // ============================================
+       // BÚSQUEDAS AVANZADAS CON QUERY
+       // ============================================
 
-    /**
-     * Obtener usuarios recientes (últimos N días)
-     */
-    @Query("SELECT u FROM User u WHERE u.createdAt >= :since ORDER BY u.createdAt DESC")
-    List<User> findRecentUsers(@Param("since") LocalDateTime since);
+       /**
+        * Buscar usuarios por múltiples criterios
+        */
+       @Query("SELECT u FROM User u WHERE " +
+                     "(:role IS NULL OR u.role = :role) AND " +
+                     "(:isActive IS NULL OR u.isActive = :isActive) AND " +
+                     "(:emailVerified IS NULL OR u.emailVerified = :emailVerified) AND " +
+                     "(:searchTerm IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+                     " LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+       List<User> findUsersByCriteria(@Param("role") User.Role role,
+                     @Param("isActive") Boolean isActive,
+                     @Param("emailVerified") Boolean emailVerified,
+                     @Param("searchTerm") String searchTerm);
 
-    /**
-     * Obtener administradores activos
-     */
-    @Query("SELECT u FROM User u WHERE u.role = 'ADMIN' AND u.isActive = true ORDER BY u.createdAt")
-    List<User> findActiveAdmins();
+       /**
+        * Obtener usuarios recientes (últimos N días)
+        */
+       @Query("SELECT u FROM User u WHERE u.createdAt >= :since ORDER BY u.createdAt DESC")
+       List<User> findRecentUsers(@Param("since") LocalDateTime since);
 
-    /**
-     * Buscar usuarios por patrón de email
-     */
-    @Query("SELECT u FROM User u WHERE u.email LIKE %:emailPattern%")
-    List<User> findByEmailPattern(@Param("emailPattern") String emailPattern);
+       /**
+        * Obtener administradores activos
+        */
+       @Query("SELECT u FROM User u WHERE u.role = 'ADMIN' AND u.isActive = true ORDER BY u.createdAt")
+       List<User> findActiveAdmins();
 
-    /**
-     * Obtener estadísticas de usuarios por rol
-     */
-    @Query("SELECT u.role as role, COUNT(u) as count FROM User u GROUP BY u.role")
-    List<UserRoleStats> getUserRoleStatistics();
+       /**
+        * Buscar usuarios por patrón de email
+        */
+       @Query("SELECT u FROM User u WHERE u.email LIKE %:emailPattern%")
+       List<User> findByEmailPattern(@Param("emailPattern") String emailPattern);
 
-    /**
-     * Buscar usuarios inactivos por más de X días
-     */
-    @Query("SELECT u FROM User u WHERE u.updatedAt < :cutoffDate AND u.isActive = false")
-    List<User> findInactiveUsersSince(@Param("cutoffDate") LocalDateTime cutoffDate);
+       /**
+        * Obtener estadísticas de usuarios por rol
+        */
+       @Query("SELECT u.role as role, COUNT(u) as count FROM User u GROUP BY u.role")
+       List<UserRoleStats> getUserRoleStatistics();
 
-    // ============================================
-    // VERIFICACIONES DE SEGURIDAD
-    // ============================================
+       /**
+        * Buscar usuarios inactivos por más de X días
+        */
+       @Query("SELECT u FROM User u WHERE u.updatedAt < :cutoffDate AND u.isActive = false")
+       List<User> findInactiveUsersSince(@Param("cutoffDate") LocalDateTime cutoffDate);
 
-    /**
-     * Verificar si un usuario es administrador activo
-     */
-    @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u " +
-           "WHERE u.email = :email AND u.role = 'ADMIN' AND u.isActive = true")
-    boolean isActiveAdmin(@Param("email") String email);
+       // ============================================
+       // VERIFICACIONES DE SEGURIDAD
+       // ============================================
 
-    /**
-     * Contar administradores activos (para validaciones de seguridad)
-     */
-    @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'ADMIN' AND u.isActive = true")
-    long countActiveAdmins();
+       /**
+        * Verificar si un usuario es administrador activo
+        */
+       @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u " +
+                     "WHERE u.email = :email AND u.role = 'ADMIN' AND u.isActive = true")
+       boolean isActiveAdmin(@Param("email") String email);
 
-    /**
-     * Verificar si un usuario tiene acceso activo
-     */
-    @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u " +
-           "WHERE u.email = :email AND u.isActive = true AND u.emailVerified = true")
-    boolean hasActiveAccess(@Param("email") String email);
+       /**
+        * Contar administradores activos (para validaciones de seguridad)
+        */
+       @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'ADMIN' AND u.isActive = true")
+       long countActiveAdmins();
 
-    // ============================================
-    // INTERFACE PARA ESTADÍSTICAS
-    // ============================================
+       /**
+        * Verificar si un usuario tiene acceso activo
+        */
+       @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u " +
+                     "WHERE u.email = :email AND u.isActive = true AND u.emailVerified = true")
+       boolean hasActiveAccess(@Param("email") String email);
 
-    /**
-     * Interface para estadísticas de roles de usuario
-     */
-    interface UserRoleStats {
-        User.Role getRole();
-        Long getCount();
-    }
+       // ============================================
+       // INTERFACE PARA ESTADÍSTICAS
+       // ============================================
+
+       /**
+        * Interface para estadísticas de roles de usuario
+        */
+       interface UserRoleStats {
+              User.Role getRole();
+
+              Long getCount();
+       }
 }
