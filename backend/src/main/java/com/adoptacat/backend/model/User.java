@@ -123,6 +123,16 @@ public class User {
         this.googleId = googleId;
     }
 
+    // Alias para compatibilidad con Spring Security UserDetails
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    public void setPassword(String password) {
+        this.passwordHash = password;
+    }
+
+
     public String getFullName() {
         return fullName;
     }

@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,30 +29,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authz -> authz
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authz -> authz
 
-                .requestMatchers(
-                    "/api/v1/auth/**",
-                    "/api/v1/cats",
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/actuator/health"
-                ).permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/cats/**",
+                                "/api/adoption-applications/**",
+                                "/api/adoption-profiles/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/actuator/**")
+                        .permitAll()
 
-                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                .anyRequest().authenticated()
-            )
+                        .anyRequest().authenticated())
 
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-            .headers(headers -> headers
-                .frameOptions(frameOptions -> frameOptions.sameOrigin())
-            );
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()));
 
         return http.build();
     }
@@ -63,20 +61,17 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(Arrays.asList(
-            "http://localhost:*",
-            "http://127.0.0.1:*",
-            "https://adopcatcix.netlify.app"
-        ));
+                "http://localhost:*",
+                "http://127.0.0.1:*",
+                "https://adopcatcix.netlify.app"));
 
         configuration.setAllowedMethods(Arrays.asList(
-            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"
-        ));
+                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
 
         configuration.setAllowedHeaders(Arrays.asList("*"));
 
         configuration.setExposedHeaders(Arrays.asList(
-            "Authorization", "Content-Type", "Content-Length", "Content-Disposition"
-        ));
+                "Authorization", "Content-Type", "Content-Length", "Content-Disposition"));
 
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
