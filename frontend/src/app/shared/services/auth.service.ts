@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
 export interface User {
@@ -32,7 +33,10 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       this.user.set(JSON.parse(savedUser));
@@ -73,6 +77,7 @@ export class AuthService {
     this.user.set(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    this.router.navigate(['/']);
   }
 
   isLoggedIn() {
