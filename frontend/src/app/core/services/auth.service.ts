@@ -35,13 +35,13 @@ export interface RegisterRequest {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = `${environment.apiUrl}/auth`;
+  private readonly baseUrl = `${environment.apiUrl}/api/auth`;
   private readonly currentUserSubject = new BehaviorSubject<UserInfo | null>(null);
-  
+
   // Signals para estado reactivo
   isAuthenticated = signal(false);
   currentUser = signal<UserInfo | null>(null);
-  
+
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router
@@ -52,7 +52,7 @@ export class AuthService {
   private initializeAuthState() {
     const token = this.getToken();
     const user = this.getStoredUser();
-    
+
     if (token && user) {
       this.currentUser.set(user);
       this.isAuthenticated.set(true);
@@ -61,8 +61,24 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials)
+    return this.http.post<any>(`${this.baseUrl}/login`, credentials)
       .pipe(
+        map(response => {
+          // Adaptar respuesta del backend (plana) a la estructura esperada por el frontend
+          const user: UserInfo = {
+            id: 0, // El backend no devuelve ID por ahora
+            email: response.email,
+            fullName: response.fullName,
+            role: response.role as 'USER' | 'ADMIN',
+            isActive: true,
+            emailVerified: true
+          };
+
+          return {
+            token: response.token,
+            user: user
+          };
+        }),
         tap(response => {
           this.setToken(response.token);
           this.setUser(response.user);
@@ -124,10 +140,12 @@ export class AuthService {
 
   // Verificar estado de admin
   checkAdminRole(): Observable<boolean> {
-    return this.http.get<{ isAdmin: boolean }>(`${this.baseUrl}/check-admin`)
-      .pipe(
-        map(response => response.isAdmin)
-      );
+    // Este endpoint no existe en el backend actual, pero podemos simularlo o implementarlo si es necesario
+    // Por ahora, retornamos true si el usuario actual es admin
+    return new Observable(observer => {
+      observer.next(this.isAdmin());
+      observer.complete();
+    });
   }
 
   // Cambiar contraseña

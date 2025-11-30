@@ -24,9 +24,10 @@ export class NavigationComponent {
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
   @ViewChild(RegisterModalComponent) registerModal!: RegisterModalComponent;
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   public user = computed(() => this.authService.user());
+  public isAdmin = computed(() => this.authService.isAdmin());
 
   public get userInitials(): string {
     const name = this.user()?.name;

@@ -13,14 +13,11 @@ export interface User {
 }
 
 export interface LoginResponse {
-  id: number;
-  email: string;
-  name: string;
-  role: string;
-  isAdmin: boolean;
-  emailVerified?: boolean;
-  profileImageUrl?: string;
   token: string;
+  message: string;
+  email: string;
+  role: string;
+  fullName: string;
 }
 
 export interface LoginCredentials {
@@ -36,7 +33,6 @@ export class AuthService {
   private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {
-
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       this.user.set(JSON.parse(savedUser));
@@ -48,20 +44,18 @@ export class AuthService {
       .post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(
         tap((res) => {
-
           const userData: User = {
-            id: res.id,
-            name: res.name,
+            id: 0, // Backend no devuelve ID aún
+            name: res.fullName,
             email: res.email,
             role: res.role,
-            isAdmin: res.isAdmin,
-            emailVerified: res.emailVerified,
-            profileImageUrl: res.profileImageUrl,
+            isAdmin: res.role === 'ADMIN',
+            emailVerified: true,
+            profileImageUrl: ''
           };
 
           this.user.set(userData);
           localStorage.setItem('user', JSON.stringify(userData));
-
           localStorage.setItem('token', res.token);
         })
       );

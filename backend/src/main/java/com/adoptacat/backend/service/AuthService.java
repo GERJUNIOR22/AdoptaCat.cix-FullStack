@@ -1,8 +1,8 @@
-
 package com.adoptacat.backend.service;
 
 import com.adoptacat.backend.dto.request.UserLoginRequest;
 import com.adoptacat.backend.dto.request.UserRegisterRequest;
+import com.adoptacat.backend.dto.response.AuthResponse;
 import com.adoptacat.backend.model.User;
 import com.adoptacat.backend.repository.UserRepository;
 import com.adoptacat.backend.security.JwtTokenProvider;
@@ -25,7 +25,7 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String register(UserRegisterRequest request) {
+    public AuthResponse register(UserRegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
@@ -39,17 +39,19 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return jwtTokenProvider.generateToken(user.getEmail());
+        String token = jwtTokenProvider.generateToken(user.getEmail());
+        return new AuthResponse(token, "Usuario registrado exitosamente", user.getEmail(), user.getRole().name(),
+                user.getFullName());
     }
 
-    public String login(UserLoginRequest request) {
+    public AuthResponse login(UserLoginRequest request) {
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
         if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtTokenProvider.generateToken(userOpt.get().getEmail());
+        User user = userOpt.get();
+        String token = jwtTokenProvider.generateToken(user.getEmail());
+        return new AuthResponse(token, "Login exitoso", user.getEmail(), user.getRole().name(), user.getFullName());
     }
-
-    // Google OAuth would be here, but simplified
 }

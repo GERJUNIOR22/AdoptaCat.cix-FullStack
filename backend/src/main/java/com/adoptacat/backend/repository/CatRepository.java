@@ -51,20 +51,22 @@ public interface CatRepository extends JpaRepository<Cat, String> {
         List<Cat> findByBreedContainingIgnoreCaseAndAdoptionStatus(@Param("breed") String breed,
                         @Param("status") Cat.AdoptionStatus status);
 
-        // Búsqueda completa con filtros múltiples - CORREGIDO
+        // Búsqueda completa con filtros múltiples
         @Query("SELECT c FROM Cat c WHERE " +
                         "(:gender IS NULL OR c.gender = :gender) AND " +
                         "(:size IS NULL OR c.size = :size) AND " +
+                        "(:activityLevel IS NULL OR c.activityLevel = :activityLevel) AND " +
+                        "(:isSpecialNeeds IS NULL OR c.isSpecialNeeds = :isSpecialNeeds) AND " +
                         "(:isVaccinated IS NULL OR c.isVaccinated = :isVaccinated) AND " +
                         "(:isSterilized IS NULL OR c.isSterilized = :isSterilized) AND " +
-                        "(:isSpecialNeeds IS NULL OR c.isSpecialNeeds = :isSpecialNeeds) AND " +
                         "c.adoptionStatus = :status")
         Page<Cat> findCatsWithFilters(
                         @Param("gender") Cat.Gender gender,
                         @Param("size") Cat.Size size,
+                        @Param("activityLevel") Cat.ActivityLevel activityLevel,
+                        @Param("isSpecialNeeds") Boolean isSpecialNeeds,
                         @Param("isVaccinated") Boolean isVaccinated,
                         @Param("isSterilized") Boolean isSterilized,
-                        @Param("isSpecialNeeds") Boolean isSpecialNeeds,
                         @Param("status") Cat.AdoptionStatus status,
                         Pageable pageable);
 

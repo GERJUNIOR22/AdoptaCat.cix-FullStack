@@ -22,22 +22,22 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody UserRegisterRequest request) {
         try {
-            String token = authService.register(request);
-            return ResponseEntity.ok(new AuthResponse(token, "Usuario registrado exitosamente", request.getEmail()));
+            AuthResponse response = authService.register(request);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
-                    .body(new AuthResponse(null, e.getMessage(), null));
+                    .body(new AuthResponse(null, e.getMessage(), null, null, null));
         }
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody UserLoginRequest request) {
         try {
-            String token = authService.login(request);
-            return ResponseEntity.ok(new AuthResponse(token, "Login exitoso", request.getEmail()));
+            AuthResponse response = authService.login(request);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
-                    .body(new AuthResponse(null, e.getMessage(), null));
+                    .body(new AuthResponse(null, e.getMessage(), null, null, null));
         }
     }
 
