@@ -20,72 +20,78 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
+        private final JwtFilter jwtFilter;
+        private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
 
-    public SecurityConfig(JwtFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
-    }
+        public SecurityConfig(JwtFilter jwtFilter, OAuth2LoginSuccessHandler oauth2LoginSuccessHandler) {
+                this.jwtFilter = jwtFilter;
+                this.oauth2LoginSuccessHandler = oauth2LoginSuccessHandler;
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authz -> authz
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .csrf(csrf -> csrf.disable())
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(authz -> authz
 
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/cats/**",
-                                "/api/adoption-applications/**",
-                                "/api/adoption-profiles/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/actuator/**")
-                        .permitAll()
+                                                .requestMatchers(
+                                                                "/api/auth/**",
+                                                                "/api/cats/**",
+                                                                "/api/adoption-applications/**",
+                                                                "/api/adoption-profiles/**",
+                                                                "/v3/api-docs/**",
+                                                                "/swagger-ui/**",
+                                                                "/actuator/**")
+                                                .permitAll()
 
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                        .anyRequest().authenticated())
+                                                .anyRequest().authenticated())
 
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                                .oauth2Login(oauth2 -> oauth2
+                                                .successHandler(oauth2LoginSuccessHandler))
 
-                .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.sameOrigin()));
+                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-        return http.build();
-    }
+                                .headers(headers -> headers
+                                                .frameOptions(frameOptions -> frameOptions.sameOrigin()));
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+                return http.build();
+        }
 
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:*",
-                "http://127.0.0.1:*",
-                "https://adopcatcix.netlify.app"));
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedMethods(Arrays.asList(
-                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
+                configuration.setAllowedOriginPatterns(Arrays.asList(
+                                "http://localhost:*",
+                                "http://127.0.0.1:*",
+                                "https://adopcatcix.netlify.app"));
 
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+                configuration.setAllowedMethods(Arrays.asList(
+                                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
 
-        configuration.setExposedHeaders(Arrays.asList(
-                "Authorization", "Content-Type", "Content-Length", "Content-Disposition"));
+                configuration.setAllowedHeaders(Arrays.asList("*"));
 
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
+                configuration.setExposedHeaders(Arrays.asList(
+                                "Authorization", "Content-Type", "Content-Length", "Content-Disposition"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-        source.registerCorsConfiguration("/oauth2/**", configuration);
-        source.registerCorsConfiguration("/login/**", configuration);
+                configuration.setAllowCredentials(true);
+                configuration.setMaxAge(3600L);
 
-        return source;
-    }
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/api/**", configuration);
+                source.registerCorsConfiguration("/oauth2/**", configuration);
+                source.registerCorsConfiguration("/login/**", configuration);
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
+                return source;
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder(12);
+        }
 }
