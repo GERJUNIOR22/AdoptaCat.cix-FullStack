@@ -80,4 +80,6 @@ public interface CatRepository extends JpaRepository<Cat, String> {
 
         // Buscar gato por ID y que esté disponible
         Optional<Cat> findByIdAndAdoptionStatus(String id, Cat.AdoptionStatus status);
+
+        boolean existsByName(String name);
 }

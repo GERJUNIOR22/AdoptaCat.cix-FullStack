@@ -1,9 +1,11 @@
 export interface Cat {
   id: string;
   name: string;
-  age?: string;
+  age?: number | string;
+  edadMeses?: number;
   breed?: string;
   image?: string;
+  mainImageUrl?: string;
   gallery?: string[];
   personality?: string | string[];
   story?: string;
@@ -11,7 +13,9 @@ export interface Cat {
   isSpecialNeeds?: boolean;
   vaccinated?: boolean;
   sterilized?: boolean;
-  gender?: 'male' | 'female';
+  isVaccinated?: boolean;
+  isSterilized?: boolean;
+  gender?: 'male' | 'female' | 'MALE' | 'FEMALE';
 }
 
 export interface DetailedCat extends Cat {
