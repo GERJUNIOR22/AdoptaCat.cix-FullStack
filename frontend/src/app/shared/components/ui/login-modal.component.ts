@@ -190,6 +190,7 @@ export class LoginModalComponent {
   // Social Login Methods
   loginWithGoogle() {
     // Redirige al backend para iniciar OAuth2 con Google
+    document.cookie = "auth_intent=login; path=/; max-age=300";
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 
