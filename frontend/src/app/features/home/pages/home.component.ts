@@ -33,6 +33,11 @@ export class HomeComponent implements OnInit {
 
     // Check for login params from OAuth redirect
     this.route.queryParams.subscribe(params => {
+      if (params['error'] === 'user_not_registered') {
+        alert('No existe una cuenta asociada a este correo. Por favor regístrate primero.');
+        this.router.navigate([], { queryParams: {} });
+      }
+
       if (params['name'] && params['email']) {
         // Crear objeto User completo con valores por defecto
         const user = {

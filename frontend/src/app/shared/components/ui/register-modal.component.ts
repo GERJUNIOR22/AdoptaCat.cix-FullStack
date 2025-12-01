@@ -9,38 +9,37 @@ import { HttpClient } from '@angular/common/http';
   imports: [CommonModule, FormsModule],
   template: `
     @if (isVisible()) {
-      <div *ngIf="isVisible()" class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm"
+      <div class="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm"
            (click)="closeModal()">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4"
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto"
              (click)="$event.stopPropagation()">
 
-          <!-- Cabecera -->
-          <div class="p-6 border-b border-gray-200">
+          <!-- Header -->
+          <div class="p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
             <div class="flex justify-between items-center">
-              <h2 class="text-2xl font-bold text-gray-900 font-sans">Crear cuenta</h2>
+              <h2 class="text-2xl font-bold text-gray-900 font-sans">Crear Cuenta</h2>
               <button (click)="closeModal()"
                       class="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                 </svg>
               </button>
             </div>
             <p class="text-sm text-gray-500 mt-4 text-center font-reading">
-              Regístrate para poder adoptar y seguir a tus gatitos favoritos
+              Únete a nuestra comunidad de amantes de los gatos
             </p>
           </div>
 
-          <!-- Contenido -->
+          <!-- Content -->
           <div class="p-6">
-            <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+            <form (ngSubmit)="onSubmit(registerForm)" #registerForm="ngForm">
               <div class="space-y-4">
 
-                <!-- Nombre completo del usuario -->
+                <!-- Nombre Completo -->
                 <div>
                   <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2 font-sans">
-                    Nombre completo
+                    Nombre Completo
                   </label>
                   <input
                     type="text"
@@ -49,7 +48,7 @@ import { HttpClient } from '@angular/common/http';
                     [(ngModel)]="form.fullName"
                     required
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Tu nombre completo">
+                    placeholder="Juan Pérez">
                 </div>
 
                 <!-- Email -->
@@ -254,6 +253,7 @@ export class RegisterModalComponent {
   }
 
   registerWithGoogle() {
+    document.cookie = "auth_intent=register; path=/; max-age=300";
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 
@@ -309,5 +309,3 @@ export class RegisterModalComponent {
     });
   }
 }
-
-// Texto para realizar un push en la rama develop (IGNORAR)
