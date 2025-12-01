@@ -103,9 +103,9 @@ export class ProfileComponent implements OnInit {
       this.isSubmitting = true;
       this.submitError = '';
       this.submitSuccess = false;
-      
+
       console.log('Formulario enviado:', this.adoptionForm.value);
-      
+
       // Preparar los datos para enviar al backend
       const profileData: AdoptionProfileData = {
         // Información del Candidato
@@ -174,7 +174,7 @@ export class ProfileComponent implements OnInit {
         next: (response) => {
           console.log('Respuesta del servidor:', response);
           this.isSubmitting = false;
-          
+
           if (response.status === 'success') {
             this.submitSuccess = true;
             alert('¡Formulario enviado exitosamente! Nos pondremos en contacto contigo.');
@@ -185,10 +185,10 @@ export class ProfileComponent implements OnInit {
             alert('Error: ' + this.submitError);
           }
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error al enviar formulario:', error);
           this.isSubmitting = false;
-          this.submitError = 'Error de conexión. Por favor, intenta nuevamente.';
+          this.submitError = error.message || 'Error de conexión. Por favor, intenta nuevamente.';
           alert('Error: ' + this.submitError);
         }
       });

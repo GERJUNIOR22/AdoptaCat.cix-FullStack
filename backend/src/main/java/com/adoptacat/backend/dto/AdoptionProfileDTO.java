@@ -66,7 +66,7 @@ public class AdoptionProfileDTO {
     private Boolean todosAcuerdan;
 
     private Boolean alguienAlergico = false;
-    private Boolean permitenArrendadores;
+    private String permitenArrendadores;
 
     @NotBlank(message = "Debe explicar qué haría en caso de cambio de domicilio")
     private String porqueCambiarDomicilio;
@@ -319,11 +319,11 @@ public class AdoptionProfileDTO {
         this.alguienAlergico = alguienAlergico;
     }
 
-    public Boolean getPermitenArrendadores() {
+    public String getPermitenArrendadores() {
         return permitenArrendadores;
     }
 
-    public void setPermitenArrendadores(Boolean permitenArrendadores) {
+    public void setPermitenArrendadores(String permitenArrendadores) {
         this.permitenArrendadores = permitenArrendadores;
     }
 
