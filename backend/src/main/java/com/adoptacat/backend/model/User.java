@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -74,9 +73,11 @@ public class User {
 
     // Relaciones
     @OneToMany(mappedBy = "reviewedBy", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<AdoptionApplication> reviewedApplications = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<BlogPost> blogPosts = new ArrayList<>();
 
     // Constructors
@@ -131,7 +132,6 @@ public class User {
     public void setPassword(String password) {
         this.passwordHash = password;
     }
-
 
     public String getFullName() {
         return fullName;

@@ -39,6 +39,7 @@ public class SecurityConfig {
                                                                 "/api/cats/**",
                                                                 "/api/adoption-applications/**",
                                                                 "/api/adoption-profiles/**",
+                                                                "/api/blog/**",
                                                                 "/v3/api-docs/**",
                                                                 "/swagger-ui/**",
                                                                 "/actuator/**")
