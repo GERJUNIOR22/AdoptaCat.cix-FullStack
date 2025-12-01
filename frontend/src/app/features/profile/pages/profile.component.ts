@@ -18,6 +18,10 @@ export class ProfileComponent implements OnInit {
   submitSuccess = false;
   submitError = '';
 
+  isEditing = true; // Default to true for new profiles
+  isLoading = true;
+  originalProfileData: any = null;
+
   private readonly fb = inject(FormBuilder);
   private readonly titleService = inject(Title);
   private readonly authService = inject(AuthService);
@@ -95,6 +99,55 @@ export class ProfileComponent implements OnInit {
         nombreCompleto: user.name,
         correoElectronico: user.email
       });
+
+      // Load existing profile if exists
+      this.loadProfile(user.email);
+    } else {
+      this.isLoading = false;
+    }
+  }
+
+  loadProfile(email: string) {
+    this.isLoading = true;
+    this.adoptionProfileService.getProfileByEmail(email).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.status === 'success' && response.data) {
+          // Profile exists
+          this.originalProfileData = response.data;
+          this.populateForm(response.data);
+          this.isEditing = false;
+          this.adoptionForm.disable();
+        } else {
+          // New profile
+          this.isEditing = true;
+          this.adoptionForm.enable();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading profile:', error);
+        this.isLoading = false;
+        this.isEditing = true; // Allow editing if load fails (or assume new)
+      }
+    });
+  }
+
+  populateForm(data: any) {
+    this.adoptionForm.patchValue({
+      ...data
+    });
+  }
+
+  enableEditing() {
+    this.isEditing = true;
+    this.adoptionForm.enable();
+  }
+
+  cancelEditing() {
+    this.isEditing = false;
+    this.adoptionForm.disable();
+    if (this.originalProfileData) {
+      this.populateForm(this.originalProfileData);
     }
   }
 
@@ -177,9 +230,12 @@ export class ProfileComponent implements OnInit {
 
           if (response.status === 'success') {
             this.submitSuccess = true;
-            alert('¡Formulario enviado exitosamente! Nos pondremos en contacto contigo.');
-            // Opcionalmente resetear el formulario
-            // this.adoptionForm.reset();
+            alert('¡Formulario guardado exitosamente!');
+
+            // Update original data and switch to view mode
+            this.originalProfileData = profileData;
+            this.isEditing = false;
+            this.adoptionForm.disable();
           } else {
             this.submitError = response.message || 'Error al enviar el formulario';
             alert('Error: ' + this.submitError);

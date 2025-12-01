@@ -4,6 +4,23 @@
       <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">Ficha de Adopción Responsable</h1>
       <p class="text-gray-600 mb-8 text-center">Completa este formulario para iniciar el proceso de adopción</p>
 
+      <!-- Action Buttons -->
+      <div class="flex justify-end mb-6 gap-4">
+        <button *ngIf="!isEditing" (click)="enableEditing()" type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Editar
+        </button>
+        
+        <ng-container *ngIf="isEditing && originalProfileData">
+          <button (click)="cancelEditing()" type="button" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+            Cancelar
+          </button>
+        </ng-container>
+      </div>
+
+
       <form [formGroup]="adoptionForm" (ngSubmit)="onSubmit()" class="space-y-8">
 
         <!-- INFORMACIÓN DEL CANDIDATO -->
@@ -391,11 +408,12 @@
             </div>
           </div>
 
-          <div class="text-center">
+          <div class="text-center" *ngIf="isEditing">
             <button type="submit" [disabled]="isSubmitting" class="bg-rose-500 hover:bg-rose-600 disabled:bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-              {{ isSubmitting ? 'Enviando...' : 'Enviar Formulario' }}
+              {{ isSubmitting ? 'Guardando...' : 'Guardar Cambios' }}
             </button>
           </div>
+
         </div>
 
       </form>
