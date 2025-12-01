@@ -21,6 +21,8 @@ export class ProfileComponent implements OnInit {
   isEditing = true; // Default to true for new profiles
   isLoading = true;
   originalProfileData: any = null;
+  showSuccessModal = false;
+
 
   private readonly fb = inject(FormBuilder);
   private readonly titleService = inject(Title);
@@ -230,7 +232,7 @@ export class ProfileComponent implements OnInit {
 
           if (response.status === 'success') {
             this.submitSuccess = true;
-            alert('¡Formulario guardado exitosamente!');
+            this.showSuccessModal = true;
 
             // Update original data and switch to view mode
             this.originalProfileData = profileData;
@@ -266,5 +268,9 @@ export class ProfileComponent implements OnInit {
 
   get f() {
     return this.adoptionForm.controls;
+  }
+
+  closeSuccessModal() {
+    this.showSuccessModal = false;
   }
 }

@@ -176,6 +176,7 @@ public class AdoptionProfile {
     // Relación con usuario
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
     // Status del perfil
