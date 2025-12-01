@@ -43,7 +43,10 @@ export class HomeComponent implements OnInit {
           isAdmin: false,
           emailVerified: true
         };
-        this.authService.login(user);
+
+        const token = params['token'];
+        this.authService.login(user, token);
+
         // Clear query params
         this.router.navigate([], { queryParams: {} });
       }

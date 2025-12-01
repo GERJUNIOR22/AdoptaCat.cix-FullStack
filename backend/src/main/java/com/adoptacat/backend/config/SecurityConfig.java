@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -36,7 +34,6 @@ public class SecurityConfig {
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authorizeHttpRequests(authz -> authz
-
                                                 .requestMatchers(
                                                                 "/api/auth/**",
                                                                 "/api/cats/**",
@@ -46,16 +43,11 @@ public class SecurityConfig {
                                                                 "/swagger-ui/**",
                                                                 "/actuator/**")
                                                 .permitAll()
-
                                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
                                                 .anyRequest().authenticated())
-
                                 .oauth2Login(oauth2 -> oauth2
                                                 .successHandler(oauth2LoginSuccessHandler))
-
                                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-
                                 .headers(headers -> headers
                                                 .frameOptions(frameOptions -> frameOptions.sameOrigin()));
 
@@ -88,10 +80,5 @@ public class SecurityConfig {
                 source.registerCorsConfiguration("/login/**", configuration);
 
                 return source;
-        }
-
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder(12);
         }
 }

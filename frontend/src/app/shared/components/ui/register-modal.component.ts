@@ -170,6 +170,23 @@ import { HttpClient } from '@angular/common/http';
               </div>
             </form>
 
+            <!-- Social Login Options -->
+            <div class="relative my-6">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-500 font-reading">O regístrate con</span>
+              </div>
+            </div>
+
+            <!-- Google Register -->
+            <button class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 py-3 px-4 rounded-lg transition-all duration-200 hover:shadow-md"
+                    (click)="registerWithGoogle()">
+              <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" class="w-5 h-5">
+              <span class="font-medium font-sans">Registrarse con Google</span>
+            </button>
+
             <div class="text-center mt-6">
               <p class="text-xs text-gray-500 font-reading">
                 Al registrarte, aceptas nuestros
@@ -206,7 +223,7 @@ export class RegisterModalComponent {
 
   private apiUrl = 'http://localhost:8080/api/auth/register';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   show() {
     this.isVisible.set(true);
@@ -234,6 +251,10 @@ export class RegisterModalComponent {
     this.registerError.set('');
     this.registerSuccess.set('');
     this.isLoading.set(false);
+  }
+
+  registerWithGoogle() {
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 
   onSubmit(form: NgForm) {
