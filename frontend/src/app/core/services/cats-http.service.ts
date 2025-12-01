@@ -39,7 +39,7 @@ export interface CatStats {
 export class CatsHttpService {
   private readonly apiUrl = `${environment.apiUrl}/api/cats`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Obtener todos los gatos disponibles
   getAllAvailableCats(): Observable<Cat[]> {
@@ -91,7 +91,7 @@ export class CatsHttpService {
   // Buscar gatos con filtros avanzados
   searchCatsWithFilters(filters: CatFilters): Observable<PagedResponse<Cat>> {
     let params = new HttpParams();
-    
+
     if (filters.gender) params = params.set('gender', filters.gender.toUpperCase());
     if (filters.size) params = params.set('size', filters.size.toUpperCase());
     if (filters.activityLevel) params = params.set('activityLevel', filters.activityLevel.toUpperCase());
@@ -126,7 +126,7 @@ export class CatsHttpService {
       story: cat.story || 'Un gato especial buscando hogar.',
       description: cat.description || 'Un compañero maravilloso.',
       characteristics: {
-        birthDate: cat.age || 'Desconocido',
+        birthDate: cat.age?.toString() || 'Desconocido',
         gender: cat.gender === 'female' ? 'Hembra' : 'Macho',
         size: 'Mediano',
         activityLevel: 'Medio',

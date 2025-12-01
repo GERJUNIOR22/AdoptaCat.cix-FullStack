@@ -189,12 +189,7 @@ import { Cat } from '../../../shared/models/cat.model';
               </div>
             </div>
             <div class="relative">
-              <div class="bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl h-96 flex items-center justify-center">
-                <div class="text-center">
-                  <div class="w-32 h-32 bg-purple-300 rounded-full mx-auto mb-4 opacity-60"></div>
-                  <p class="text-purple-700 font-medium">Imagen: Familia feliz con gato adoptado</p>
-                </div>
-              </div>
+              <img src="assets/adoptacat/familia-gato-adoptado.webp" alt="Familia feliz con gato adoptado" class="rounded-2xl h-96 w-full object-cover shadow-lg">
             </div>
           </div>
         </div>
@@ -293,6 +288,7 @@ export class AdoptionComponent implements OnInit {
 
   private loadCats() {
     this.catsService.getCats().subscribe(cats => {
+      console.log('Gatos recibidos del servicio:', cats);
       this.cats.set(cats);
     });
   }
