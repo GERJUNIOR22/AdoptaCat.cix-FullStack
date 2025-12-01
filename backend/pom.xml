@@ -12,19 +12,26 @@
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>backend</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
+	<description>AdoptaCat Backend - Sistema de adopción de gatos</description>
+	<url>https://github.com/GERJUNIOR22/AdoptaCat.cix-FullStack</url>
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+		</license>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<id>gerjunior22</id>
+			<name>German Junior</name>
+			<email>gerjunior22@example.com</email>
+		</developer>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection>scm:git:git://github.com/GERJUNIOR22/AdoptaCat.cix-FullStack.git</connection>
+		<developerConnection>scm:git:ssh://github.com:GERJUNIOR22/AdoptaCat.cix-FullStack.git</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/GERJUNIOR22/AdoptaCat.cix-FullStack</url>
 	</scm>
 	<properties>
 		<java.version>17</java.version>
@@ -149,6 +156,10 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
 
 		<!-- Validación y sanitización de datos -->
 		<dependency>
@@ -161,6 +172,25 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+
+		<!-- Token -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 

@@ -3,7 +3,6 @@ package com.adoptacat.backend.controller;
 import com.adoptacat.backend.model.AdoptionApplication;
 import com.adoptacat.backend.service.AdoptionApplicationService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +17,15 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 public class AdoptionApplicationController {
     
-    @Autowired
-    private AdoptionApplicationService applicationService;
+    private final AdoptionApplicationService applicationService;
+    
+    public AdoptionApplicationController(AdoptionApplicationService applicationService) {
+        this.applicationService = applicationService;
+    }
     
     // Crear nueva solicitud de adopción
     @PostMapping
-    public ResponseEntity<?> createApplication(@Valid @RequestBody AdoptionApplication application) {
+    public ResponseEntity<Object> createApplication(@Valid @RequestBody AdoptionApplication application) {
         try {
             AdoptionApplication createdApplication = applicationService.createApplication(application);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdApplication);
@@ -85,7 +87,7 @@ public class AdoptionApplicationController {
     
     // Obtener solicitudes para un gato específico
     @GetMapping("/cat/{catId}")
-    public ResponseEntity<?> getApplicationsForCat(@PathVariable String catId) {
+    public ResponseEntity<Object> getApplicationsForCat(@PathVariable String catId) {
         try {
             List<AdoptionApplication> applications = applicationService.getApplicationsForCat(catId);
             return ResponseEntity.ok(applications);
@@ -115,16 +117,20 @@ public class AdoptionApplicationController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDirection) {
         
+        AdoptionApplicationService.ApplicationSearchFilters filters = 
+            new AdoptionApplicationService.ApplicationSearchFilters(
+                status, hasVetResources, hasChildren, acceptsVisits, hadPreviousPets, city
+            );
+        
         Page<AdoptionApplication> applications = applicationService.searchApplicationsWithFilters(
-            status, hasVetResources, hasChildren, acceptsVisits, hadPreviousPets, city,
-            page, size, sortBy, sortDirection
+            filters, page, size, sortBy, sortDirection
         );
         return ResponseEntity.ok(applications);
     }
     
     // Aprobar solicitud (Admin)
     @PatchMapping("/{id}/approve")
-    public ResponseEntity<?> approveApplication(
+    public ResponseEntity<Object> approveApplication(
             @PathVariable Long id,
             @RequestBody(required = false) AdminActionRequest request) {
         try {
@@ -138,7 +144,7 @@ public class AdoptionApplicationController {
     
     // Rechazar solicitud (Admin)
     @PatchMapping("/{id}/reject")
-    public ResponseEntity<?> rejectApplication(
+    public ResponseEntity<Object> rejectApplication(
             @PathVariable Long id,
             @RequestBody(required = false) AdminActionRequest request) {
         try {
@@ -152,7 +158,7 @@ public class AdoptionApplicationController {
     
     // Poner solicitud en revisión (Admin)
     @PatchMapping("/{id}/under-review")
-    public ResponseEntity<?> setUnderReview(
+    public ResponseEntity<Object> setUnderReview(
             @PathVariable Long id,
             @RequestBody(required = false) AdminActionRequest request) {
         try {
@@ -166,7 +172,7 @@ public class AdoptionApplicationController {
     
     // Cancelar solicitud
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelApplication(
+    public ResponseEntity<Object> cancelApplication(
             @PathVariable Long id,
             @RequestBody(required = false) AdminActionRequest request) {
         try {
@@ -180,7 +186,7 @@ public class AdoptionApplicationController {
     
     // Actualizar solicitud
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateApplication(
+    public ResponseEntity<Object> updateApplication(
             @PathVariable Long id,
             @Valid @RequestBody AdoptionApplication applicationDetails) {
         try {

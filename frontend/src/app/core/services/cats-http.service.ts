@@ -13,7 +13,11 @@ export interface CatFilters {
   isVaccinated?: boolean;
   isSterilized?: boolean;
   page?: number;
+<<<<<<< HEAD
   size?: number;
+=======
+  pageSize?: number;
+>>>>>>> develop
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
@@ -39,7 +43,11 @@ export interface CatStats {
 export class CatsHttpService {
   private readonly apiUrl = `${environment.apiUrl}/api/cats`;
 
+<<<<<<< HEAD
   constructor(private http: HttpClient) {}
+=======
+  constructor(private http: HttpClient) { }
+>>>>>>> develop
 
   // Obtener todos los gatos disponibles
   getAllAvailableCats(): Observable<Cat[]> {
@@ -91,7 +99,11 @@ export class CatsHttpService {
   // Buscar gatos con filtros avanzados
   searchCatsWithFilters(filters: CatFilters): Observable<PagedResponse<Cat>> {
     let params = new HttpParams();
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> develop
     if (filters.gender) params = params.set('gender', filters.gender.toUpperCase());
     if (filters.size) params = params.set('size', filters.size.toUpperCase());
     if (filters.activityLevel) params = params.set('activityLevel', filters.activityLevel.toUpperCase());
@@ -99,7 +111,11 @@ export class CatsHttpService {
     if (filters.isVaccinated !== undefined) params = params.set('isVaccinated', filters.isVaccinated.toString());
     if (filters.isSterilized !== undefined) params = params.set('isSterilized', filters.isSterilized.toString());
     if (filters.page !== undefined) params = params.set('page', filters.page.toString());
+<<<<<<< HEAD
     if (filters.size !== undefined) params = params.set('size', filters.size.toString());
+=======
+    if (filters.pageSize !== undefined) params = params.set('size', filters.pageSize.toString());
+>>>>>>> develop
     if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
     if (filters.sortDirection) params = params.set('sortDirection', filters.sortDirection);
 
@@ -126,7 +142,11 @@ export class CatsHttpService {
       story: cat.story || 'Un gato especial buscando hogar.',
       description: cat.description || 'Un compañero maravilloso.',
       characteristics: {
+<<<<<<< HEAD
         birthDate: cat.age || 'Desconocido',
+=======
+        birthDate: cat.age?.toString() || 'Desconocido',
+>>>>>>> develop
         gender: cat.gender === 'female' ? 'Hembra' : 'Macho',
         size: 'Mediano',
         activityLevel: 'Medio',

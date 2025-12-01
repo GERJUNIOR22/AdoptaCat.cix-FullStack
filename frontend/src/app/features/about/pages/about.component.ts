@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 
 interface TeamMember {
   id: number;
@@ -357,8 +358,14 @@ interface TeamMember {
     }
   `]
 })
-export class AboutComponent {
+export class AboutComponent implements OnInit {
+  private titleService = inject(Title);
+
   selectedMember = signal<TeamMember | null>(null);
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Nosotros | AdopCat');
+  }
   
   teamMembers = signal<TeamMember[]>([
     {

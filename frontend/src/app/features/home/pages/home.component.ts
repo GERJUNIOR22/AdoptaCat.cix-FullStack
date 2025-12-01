@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../shared/services/auth.service';
 import { HeroComponent } from '../components/hero.component';
 import { FeaturedCatsComponent } from '../components/featured-cats.component';
 
@@ -11,7 +13,12 @@ import { FeaturedCatsComponent } from '../components/featured-cats.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  private readonly titleService = inject(Title);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+
   // Signals para controlar los modales
   public showAdoptionModal = signal(false);
   public showDonationModal = signal(false);
@@ -20,6 +27,36 @@ export class HomeComponent {
 
   // Signal para controlar el acordeón de FAQ
   public activeFaqIndex = signal<number | null>(null);
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Inicio | AdopCat');
+
+    // Check for login params from OAuth redirect
+    this.route.queryParams.subscribe(params => {
+      if (params['error'] === 'user_not_registered') {
+        alert('No existe una cuenta asociada a este correo. Por favor regístrate primero.');
+        this.router.navigate([], { queryParams: {} });
+      }
+
+      if (params['name'] && params['email']) {
+        // Crear objeto User completo con valores por defecto
+        const user = {
+          id: 0, // ID temporal, debería venir del backend
+          name: params['name'],
+          email: params['email'],
+          role: 'USER',
+          isAdmin: false,
+          emailVerified: true
+        };
+
+        const token = params['token'];
+        this.authService.login(user, token);
+
+        // Clear query params
+        this.router.navigate([], { queryParams: {} });
+      }
+    });
+  }
 
   // Métodos para abrir modales
   public openAdoptionModal(): void {

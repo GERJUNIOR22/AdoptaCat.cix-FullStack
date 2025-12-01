@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 
 interface DonationAmount {
   amount: number;
@@ -269,8 +270,14 @@ interface PaymentMethod {
     }
   `]
 })
-export class DonationsComponent {
+export class DonationsComponent implements OnInit {
+  private titleService = inject(Title);
+
   selectedDonationAmount = signal<number | null>(null);
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Donaciones | AdopCat');
+  }
   selectedPaymentMethod = signal<string | null>(null);
   showCustomAmount = signal<boolean>(false);
 

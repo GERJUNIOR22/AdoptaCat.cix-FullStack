@@ -1,43 +1,82 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, signal, ViewChild, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginModalComponent } from '../../shared/components/ui/login-modal.component';
+import { RegisterModalComponent } from '../../shared/components/ui/register-modal.component';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule, LoginModalComponent], 
+  imports: [
+    CommonModule,
+    RouterModule,
+    LoginModalComponent,
+    RegisterModalComponent,
+  ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent {
-  // Conversión de useState a Angular Signals
   public isOpen = signal(false);
-  
-  @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
+  public menuOpen = signal(false);
 
-  /**
-   * Alterna el estado del menú móvil.
-   */
-  public toggleMenu(): void {
-    this.isOpen.update((current) => !current);
+  @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
+  @ViewChild(RegisterModalComponent) registerModal!: RegisterModalComponent;
+
+  constructor(private readonly authService: AuthService) { }
+
+  public user = computed(() => this.authService.user());
+  public isAdmin = computed(() => this.authService.isAdmin());
+
+  public get userInitials(): string {
+    const name = this.user()?.name;
+    if (!name) return '';
+    return name.split(' ').map(n => n.charAt(0)).join('').toUpperCase().substring(0, 2);
   }
 
-  /**
-   * Cierra el menú móvil.
-   */
+  public toggleMenu(): void {
+    this.isOpen.update(current => !current);
+  }
+
   public closeMenu(): void {
     this.isOpen.set(false);
   }
 
-  /**
-   * Abre el modal de login.
-   */
   public openLoginModal(): void {
-    this.loginModal.show();
-    
+    this.openAuthModal('login');
+  }
+
+  public openRegisterModal(): void {
+    this.openAuthModal('register');
+  }
+
+  private openAuthModal(mode: 'login' | 'register'): void {
+    if (mode === 'login') {
+      this.loginModal.show();
+    } else {
+      this.registerModal.show();
+    }
+
     if (this.isOpen()) {
       this.closeMenu();
+    }
+  }
+
+  public toggleUserMenu(): void {
+    this.menuOpen.update(current => !current);
+  }
+
+  public logout(): void {
+    this.authService.logout();
+    this.menuOpen.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  public onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.user-menu')) {
+      this.menuOpen.set(false);
     }
   }
 }

@@ -1,1 +1,7 @@
 /* Navigation component styles */
+
+.email-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

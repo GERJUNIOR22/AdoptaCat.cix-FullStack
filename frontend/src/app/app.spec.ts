@@ -5,10 +5,14 @@ import { App } from './app';
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+<<<<<<< HEAD
       imports: [
         App,
         RouterTestingModule
       ],
+=======
+      imports: [App, RouterTestingModule],
+>>>>>>> develop
     }).compileComponents();
   });
 
@@ -28,10 +32,14 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
+<<<<<<< HEAD
     
     // Verificar que los componentes principales estén presentes
     expect(compiled.querySelector('app-navigation')).toBeTruthy();
     expect(compiled.querySelector('router-outlet')).toBeTruthy();
     expect(compiled.querySelector('app-footer')).toBeTruthy();
+=======
+    expect(compiled.querySelector('nav')).toBeTruthy();
+>>>>>>> develop
   });
 });
