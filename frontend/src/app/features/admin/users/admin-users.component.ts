@@ -1,12 +1,13 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, User, PageResponse } from '../../../core/services/admin.service';
+import { UserFormModalComponent } from './user-form-modal.component';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UserFormModalComponent],
   template: `
     <div class="space-y-6">
       <!-- Header -->
@@ -17,6 +18,7 @@ import { AdminService, User, PageResponse } from '../../../core/services/admin.s
         </div>
         <div class="mt-4 sm:mt-0">
           <button type="button" 
+                  (click)="openCreateModal()"
                   class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500">
             <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
@@ -262,20 +264,19 @@ import { AdminService, User, PageResponse } from '../../../core/services/admin.s
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex items-center space-x-2">
                     <button type="button" 
-                            class="text-rose-600 hover:text-rose-900">
-                      Ver
-                    </button>
-                    <button type="button" 
+                            (click)="openEditModal(user)"
                             class="text-blue-600 hover:text-blue-900">
                       Editar
                     </button>
                     <button *ngIf="user.isActive" 
                             type="button" 
+                            (click)="toggleUserStatus(user)"
                             class="text-yellow-600 hover:text-yellow-900">
                       Desactivar
                     </button>
                     <button *ngIf="!user.isActive" 
                             type="button" 
+                            (click)="toggleUserStatus(user)"
                             class="text-green-600 hover:text-green-900">
                       Activar
                     </button>
@@ -331,6 +332,13 @@ import { AdminService, User, PageResponse } from '../../../core/services/admin.s
           </div>
         </div>
       </div>
+
+      <!-- User Form Modal -->
+      <app-user-form-modal #userModal
+                           [user]="selectedUser"
+                           (saved)="onUserSaved()"
+                           (closed)="onModalClosed()">
+      </app-user-form-modal>
     </div>
   `,
   styles: [`
@@ -340,8 +348,11 @@ import { AdminService, User, PageResponse } from '../../../core/services/admin.s
   `]
 })
 export class AdminUsersComponent implements OnInit {
+  @ViewChild('userModal') userModal!: UserFormModalComponent;
+
   usersResponse = signal<PageResponse<User> | null>(null);
   loading = signal(true);
+  selectedUser: User | null = null;
   currentPage = 0;
   pageSize = 10;
 
@@ -360,7 +371,7 @@ export class AdminUsersComponent implements OnInit {
 
   Math = Math;
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService) { }
 
   ngOnInit() {
     this.loadUsers();
@@ -369,11 +380,11 @@ export class AdminUsersComponent implements OnInit {
 
   loadUsers() {
     this.loading.set(true);
-    
+
     this.adminService.getUsers(
-      this.currentPage, 
-      this.pageSize, 
-      'createdAt', 
+      this.currentPage,
+      this.pageSize,
+      'createdAt',
       'desc'
     ).subscribe({
       next: (response) => {
@@ -395,6 +406,43 @@ export class AdminUsersComponent implements OnInit {
       verified: 128,
       admins: 5
     });
+  }
+
+  openCreateModal() {
+    this.selectedUser = null;
+    setTimeout(() => {
+      this.userModal.open();
+    });
+  }
+
+  openEditModal(user: User) {
+    this.selectedUser = user;
+    setTimeout(() => {
+      this.userModal.open();
+    });
+  }
+
+  toggleUserStatus(user: User) {
+    const action = user.isActive ? 'desactivar' : 'activar';
+    if (confirm(`¿Estás seguro de que deseas ${action} a ${user.fullName}?`)) {
+      this.adminService.toggleUserStatus(user.id).subscribe({
+        next: () => {
+          this.loadUsers();
+        },
+        error: (err) => {
+          console.error('Error toggling user status:', err);
+          alert('Error al cambiar el estado del usuario. Por favor intenta de nuevo.');
+        }
+      });
+    }
+  }
+
+  onUserSaved() {
+    this.loadUsers();
+  }
+
+  onModalClosed() {
+    this.selectedUser = null;
   }
 
   onFilterChange() {

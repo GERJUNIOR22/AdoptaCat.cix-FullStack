@@ -1,12 +1,13 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, Cat, PageResponse } from '../../../core/services/admin.service';
+import { CatFormModalComponent } from './cat-form-modal.component';
 
 @Component({
   selector: 'app-admin-cats',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CatFormModalComponent],
   template: `
     <div class="space-y-6">
       <!-- Header -->
@@ -17,6 +18,7 @@ import { AdminService, Cat, PageResponse } from '../../../core/services/admin.se
         </div>
         <div class="mt-4 sm:mt-0">
           <button type="button" 
+                  (click)="openCreateModal()"
                   class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600">
             <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
@@ -168,14 +170,12 @@ import { AdminService, Cat, PageResponse } from '../../../core/services/admin.se
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex items-center space-x-2">
                     <button type="button" 
-                            class="text-rose-600 hover:text-rose-900">
-                      Ver
-                    </button>
-                    <button type="button" 
+                            (click)="openEditModal(cat)"
                             class="text-blue-600 hover:text-blue-900">
                       Editar
                     </button>
                     <button type="button" 
+                            (click)="deleteCat(cat)"
                             class="text-red-600 hover:text-red-900">
                       Eliminar
                     </button>
@@ -231,6 +231,13 @@ import { AdminService, Cat, PageResponse } from '../../../core/services/admin.se
           </div>
         </div>
       </div>
+
+      <!-- Cat Form Modal -->
+      <app-cat-form-modal #catModal
+                          [cat]="selectedCat"
+                          (saved)="onCatSaved()"
+                          (closed)="onModalClosed()">
+      </app-cat-form-modal>
     </div>
   `,
   styles: [`
@@ -240,9 +247,12 @@ import { AdminService, Cat, PageResponse } from '../../../core/services/admin.se
   `]
 })
 export class AdminCatsComponent implements OnInit {
+  @ViewChild('catModal') catModal!: CatFormModalComponent;
+
   catsResponse = signal<PageResponse<Cat> | null>(null);
   loading = signal(true);
   selectedCats: string[] = [];
+  selectedCat: Cat | null = null;
   currentPage = 0;
   pageSize = 10;
 
@@ -253,7 +263,7 @@ export class AdminCatsComponent implements OnInit {
 
   Math = Math;
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService) { }
 
   ngOnInit() {
     this.loadCats();
@@ -261,12 +271,12 @@ export class AdminCatsComponent implements OnInit {
 
   loadCats() {
     this.loading.set(true);
-    
+
     this.adminService.getCats(
-      this.currentPage, 
-      this.pageSize, 
-      'name', 
-      'asc', 
+      this.currentPage,
+      this.pageSize,
+      'name',
+      'asc',
       this.filters.status || undefined
     ).subscribe({
       next: (response) => {
@@ -278,6 +288,42 @@ export class AdminCatsComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  openCreateModal() {
+    this.selectedCat = null;
+    setTimeout(() => {
+      this.catModal.open();
+    });
+  }
+
+  openEditModal(cat: Cat) {
+    this.selectedCat = cat;
+    setTimeout(() => {
+      this.catModal.open();
+    });
+  }
+
+  deleteCat(cat: Cat) {
+    if (confirm(`¿Estás seguro de que deseas eliminar a ${cat.name}?`)) {
+      this.adminService.deleteCat(cat.id).subscribe({
+        next: () => {
+          this.loadCats();
+        },
+        error: (err) => {
+          console.error('Error deleting cat:', err);
+          alert('Error al eliminar el gato. Por favor intenta de nuevo.');
+        }
+      });
+    }
+  }
+
+  onCatSaved() {
+    this.loadCats();
+  }
+
+  onModalClosed() {
+    this.selectedCat = null;
   }
 
   onFilterChange() {
@@ -326,7 +372,7 @@ export class AdminCatsComponent implements OnInit {
   toggleSelectAll(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     const cats = this.catsResponse()?.content || [];
-    
+
     if (isChecked) {
       this.selectedCats = cats.map(cat => cat.id);
     } else {

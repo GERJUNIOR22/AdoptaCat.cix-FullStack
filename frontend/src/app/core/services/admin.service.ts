@@ -84,7 +84,7 @@ export interface PageResponse<T> {
 export class AdminService {
   private readonly baseUrl = `${environment.apiUrl}/admin`;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   // ============================================
   // DASHBOARD Y ESTADÍSTICAS
@@ -156,6 +156,18 @@ export class AdminService {
     }
 
     return this.http.get<PageResponse<Cat>>(`${this.baseUrl}/cats`, { params });
+  }
+
+  createCat(cat: Partial<Cat>): Observable<Cat> {
+    return this.http.post<Cat>(`${environment.apiUrl}/cats`, cat);
+  }
+
+  updateCat(id: string, cat: Partial<Cat>): Observable<Cat> {
+    return this.http.put<Cat>(`${environment.apiUrl}/cats/${id}`, cat);
+  }
+
+  deleteCat(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/cats/${id}`);
   }
 
   batchUpdateCatStatus(catIds: string[], status: string): Observable<void> {
